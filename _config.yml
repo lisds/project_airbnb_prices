@@ -1,0 +1,57 @@
+# Book settings
+# Learn more at https://jupyterbook.org/customize/config.html
+
+title: My sample book
+author: The Jupyter Book Community
+logo: logo.png
+
+execute:
+  # 'cache' attempts to cache the results.
+  # 'auto' appears to be safer.
+  execute_notebooks: cache
+  timeout: 180
+
+exclude_patterns:
+  # Any files that should not get built for the book.
+  - README.md
+
+# Define the name of the latex output file for PDF builds
+latex:
+  latex_documents:
+    targetname: book.tex
+
+# Add a bibtex file so that we can create citations
+bibtex_bibfiles:
+  - references.bib
+
+# Information about where the book exists on the web
+repository:
+  url: https://github.com/lisds/dsip-project-template  # Online location of your book
+  branch: main  # Which branch of the repository should be used when creating links (optional)
+
+launch_buttons:
+  # The interface interactive links will activate ["classic", "jupyterlab"]
+  notebook_interface: "jupyterlab"
+  # The URL of the JupyterHub (e.g., https://datahub.berkeley.edu)
+  jupyterhub_url: "https://ds.lis.2i2c.cloud"
+  # The URL of the BinderHub (e.g., https://mybinder.org)
+  binderhub_url: "https://mybinder.org"
+  # The URL of Google Colab (e.g., https://colab.research.google.com)
+  # colab_url: "https://colab.research.google.com"
+  thebe: true
+
+# Add GitHub buttons to your book
+# See https://jupyterbook.org/customize/config.html#add-a-link-to-your-repository
+html:
+  use_issues_button: true
+  use_repository_button: true
+
+sphinx:
+  recursive_update: true
+  config:
+    html_theme_options:
+      navigation_with_keys: false
+    nb_custom_formats:
+      .Rmd:
+        - jupytext.reads
+        - fmt: Rmd
