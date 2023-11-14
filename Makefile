@@ -5,7 +5,10 @@ html:
 	if compgen -G "*/*.ipynb" 2> /dev/null; then (echo "ipynb files" && exit 1); fi
 	jupyter-book build -W .
 
-github: html
+data:
+	python3 fetch_data.py
+
+github: html data
 	ghp-import -n _build/html -p -f
 
 clean:

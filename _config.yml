@@ -8,12 +8,13 @@ logo: logo.png
 execute:
   # 'cache' attempts to cache the results.
   # 'auto' appears to be safer.
-  execute_notebooks: cache
+  execute_notebooks: auto
   timeout: 180
 
 exclude_patterns:
   # Any files that should not get built for the book.
   - README.md
+  - data/README.md
 
 # Define the name of the latex output file for PDF builds
 latex:
