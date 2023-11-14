@@ -1,0 +1,4 @@
+[codespell]
+skip = .git,*.pdf,*.svg,*.csv
+ignore-words-list = trough,remainers,hove
+uri-ignore-words-list = ons
