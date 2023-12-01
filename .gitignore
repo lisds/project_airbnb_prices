@@ -1,5 +1,12 @@
+#.gitignore
+
+# Ignore the clean_df.csv file in the data directory
+data/clean_df.csv
+
+#Ignore project build  in this directory when we are working on it
 _build/
-# Output for cfdcode install.
+
+# Ignore output for cfdcode install.
 build/
 *.egg-info/
 __pycache__/
