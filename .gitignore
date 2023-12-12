@@ -1,6 +1,6 @@
 #.gitignore
 
-# Ignore the the data directory
+# Ignore data
 data/proj_data.csv
 
 #Ignore project build  in this directory when we are working on it
