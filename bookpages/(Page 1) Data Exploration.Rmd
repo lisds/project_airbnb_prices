@@ -18,34 +18,48 @@ jupyter:
 ## Introduction
 
 
-Lorem Ipsum  ahoaihsdoihasoisha
+Lorem Ipsum
 
 ```{python}
 import pandas as pd
 from pathlib import Path
-from projtools.cleaning import data_setup
+from projtools import cleaning
+pd.set_option('display.max_columns', None)
 ```
 
-### Data
-It has this many columns the columns are lorem ipsum etc etc
+### Data sourcing
+The Dataset for this project contains listing data for Air BnB for London, September 2022. The dataset used is a precleaned dataset from Kaggle, that was sourced from http://insideairbnb.com.
 
-The dataset we are using comes precleaned, as such there are only a small number of minor alterations made for clarity. For more details inspect the "cleaning" py file in projtools.
+### Data cleaning
+The dataset we are using comes precleaned/processed, as such cleaning is a relatively straight forward task with minor alterations made mostly for clarity.  
+(For specifics please see the cleaning.py file within the projtools directory)
+
+Overview
+-Setting the 'id' column to the pandas index  
+-Renaming columns for clarity  
+-Removing special characters  
+-Dropping unecessary columns
+
+### Data Description
+The data set contains 48 Columns and 69351 rows/entries. The columns contain data pertaining to the property, the host, the location and reviews.
+To explore the dataset run the following cells.
 
 ```{python}
-data_setup()
+#Full pandas dataframe
+data = cleaning.data_setup()
+cleaning.group_data(data)
+data.head()
 ```
 
-#TO DO
+```{python}
 
-Stats
-Price per night by region  
-Price per no. properties owned by hosts  
-Price per review scores  
-Number of properties owned by owners
+```
 
+### Descriptive Stats
 
+```{python}
 
-
+```
 
 Averages
 
