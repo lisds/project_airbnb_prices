@@ -1,7 +1,7 @@
 #.gitignore
 
-# Ignore the clean_df.csv file in the data directory
-data/clean_df.csv
+# Ignore data
+data/proj_data.csv
 
 #Ignore project build  in this directory when we are working on it
 _build/
