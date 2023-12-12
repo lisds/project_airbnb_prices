@@ -12,51 +12,42 @@ jupyter:
     name: python3
 ---
 
+# Air BNB Price Project
+
+
+## Introduction
+
+
+Lorem Ipsum  ahoaihsdoihasoisha
+
 ```{python}
 import pandas as pd
 from pathlib import Path
+from projtools.cleaning import data_setup
 ```
+
+### Data
+It has this many columns the columns are lorem ipsum etc etc
+
+The dataset we are using comes precleaned, as such there are only a small number of minor alterations made for clarity. For more details inspect the "cleaning" py file in projtools.
 
 ```{python}
-data_path = Path('data/proj_data.csv')
-data = pd.read_csv(data_path)
-pd.set_option('display.max_columns', 60)
+data_setup()
 ```
 
-data
+#TO DO
 
-```{python}
-column_list = data.columns.tolist()
-column_list
-```
-
-Cleaning
-
-```{python}
-clean_data = data.rename(columns={'neighborhood_overview': 'neighbourhood_description'})
-
-```
-
-<!-- #region -->
 Stats
-Price per night by region
-Price per no. properties owned by hosts
-Price per review scores
-
-
-
+Price per night by region  
+Price per no. properties owned by hosts  
+Price per review scores  
 Number of properties owned by owners
-A
 
 
 
-<!-- #endregion -->
+
 
 Averages
-
-```{python}
-data
-```
 
 ```{python}
 
