@@ -29,7 +29,8 @@ Overview
 -Setting the 'id' column to the pandas index  
 -Renaming columns for clarity  
 -Removing special characters  
--Dropping unecessary columns
+-Dropping unnecessary columns
+-Reorders columns to group related data
 
 ### Data Description
 The data set contains 48 Columns and 69351 rows/entries. The columns contain data pertaining to the property, the host, the location and reviews.  
