@@ -12,42 +12,138 @@ jupyter:
     name: python3
 ---
 
-# Air BNB Price Project
+# Airbnb Datascience Project
 
 
 ## Introduction
 
 
-Lorem Ipsum  ahoaihsdoihasoisha
+### Data sourcing
+The Dataset for this project contains listing data for Air BnB for London, September 2022. The dataset used is a precleaned dataset from Kaggle, that was sourced from http://insideairbnb.com.
+
+### Data cleaning
+The dataset we are using comes precleaned/processed, as such cleaning is a relatively straight forward task with minor alterations made mostly for clarity.  
+(For specifics please see the cleaning.py file within the projtools directory)
+
+Overview  
+-Setting the 'id' column to the pandas index  
+-Renaming columns for clarity  
+-Removing special characters  
+-Dropping unnecessary columns
+-Reorders columns to group related data
+
+### Data Description
+The data set contains 48 Columns and 69351 rows/entries. The columns contain data pertaining to the property, the host, the location and reviews.  
+To explore the dataset run the following cells.
 
 ```{python}
 import pandas as pd
 from pathlib import Path
-from projtools.cleaning import data_setup
+import matplotlib.pyplot as plt
+import seaborn as sns
+from projtools import data_tools, plotting_tools  
+pd.set_option('display.max_columns', None)
+
 ```
-
-### Data
-It has this many columns the columns are lorem ipsum etc etc
-
-The dataset we are using comes precleaned, as such there are only a small number of minor alterations made for clarity. For more details inspect the "cleaning" py file in projtools.
 
 ```{python}
-data_setup()
+#Full pandas dataframe
+data = data_tools.data_setup()
+data.head()
 ```
 
-#TO DO
+### Columns Descriptions
 
-Stats
-Price per night by region  
-Price per no. properties owned by hosts  
-Price per review scores  
-Number of properties owned by owners
+| Column                                  | Description                                               |
+|-----------------------------------------|-----------------------------------------------------------|
+| id (Index)                              | The listing identification number                          |
+| host_id                                 | AirBnB host identification number                          |
+| host_name                               | Host name                                                  |
+| host_since                              | Host join date                                             |
+| host_location                           | Host Location                                             |
+| host_about                              | Host description                                          |
+| host_response_time                      | Host response time                                        |
+| host_response_rate                      | Host response rate                                        |
+| host_acceptance_rate                    | Host acceptance rate                                      |
+| host_is_superhost                       | Host is superhost true/false                               |
+| host_listings_count                     | Number of listings at the time of data collection         |
+| host_lifetime_listings_count            | Number of all-time listings                                |
+| host_verifications                      | Host verification methods                                 |
+| host_identity_verified                  | Host is a verified host                                    |
+| calculated_host_listings_count          | Total count of unique property listings                                    |
+| calculated_host_listings_count_entire_homes | Total count of entire home listings                   |
+| calculated_host_listings_count_private_rooms | Total count of private room listings                 |
+| calculated_host_listings_count_shared_rooms | Total count of shared room listings                   |
+| name                                    | Property listing                                           |
+| description                             | Listing description                                        |
+| neighbourhood_location                  | London borough                                             |
+| neighbourhood_description               | Host description of the area                               |
+| latitude                                | Listing latitude                                           |
+| longitude                               | Listing longitude                                          |
+| property_type                           | Property type                                              |
+| room_type                               | Room type                                                  |
+| accommodates                            | Maximum number of guests                                   |
+| bathrooms_text                          | Number of bathrooms (Slightly more specific due to variance)|
+| bedrooms                                | Number of bedrooms                                         |
+| beds                                    | Number of beds                                             |
+| amenities                               | Host's list of amenities                                   |
+| price_per_night_$                       | Price per night in dollars                                 |
+| minimum_nights                          | Minimum required booking duration                          |
+| maximum_nights                          | Maximum allowed booking duration                           |
+| minimum_nights_avg_bookings             | Average minimum nights booked                              |
+| maximum_nights_avg_bookings             | Average maximum nights booked                              |
+| instant_bookable                        | Instant bookable? True or False                           |
+| number_of_reviews                       | Number of total reviews                                    |
+| review_scores_rating                    | Overall review rating                                      |
+| review_scores_accuracy                  | Accuracy review rating                                     |
+| review_scores_cleanliness               | Cleanliness review rating                                  |
+| review_scores_checkin                   | Check-in review rating                                     |
+| review_scores_communication             | Communication review rating                               |
+| review_scores_location                  | Location review rating                                     |
+| review_scores_value                     | Value review rating                                        |
+| reviews_per_month                       | Number of reviews per month                                |
+| number_of_review_imgs                   | Number of review images                                    |
+| first_review                            | First review date                                          |
+| last_review                             | The most recent review date                                |
+
+
+
+### Descriptive Stats
+
+```{python}
+numerical_data = data_tools.group_data(data,'numerical')
+numerical_data.describe()
+```
+
+## Standout Stats
+
+Hosting Listings - Large difference between Max and the upper quartile, suggesting there is a small number with a high concentration.  
+Calculated Host Listings count - Large difference between the max number or listings and max number of properties.  
+Maximum nights - London has 90 day limit on stays, but this data seems to show that the second quartile for max nights is exactly 1 year.  
+Maximum nights average bookings - The first quartile seems to be 90 days but the second and third seem to be just over 3 years.  
+Reviews - The number of reviews count 69344 does not match up with the review scores counts, there is roughly 25% more rows with reviews than there are rows with actual review scores
 
 
 
 
+### Host Listings
 
-Averages
+
+According to a wired article {cite}`temperton_2020` , citing data compiled by London city hall, in May 2019 1% of Airbnb hosts were behind 15% of active listings on Airbnb.
+
+This Dataset is from September 2022 so we can test whether over the 3 years there has been any change.
+
+```{python}
+host_listings_count = numerical_data['host_listings_count']
+print(host_listings_count.describe())
+
+```
+
+We can see here that the first quartile is 1, the second quartile is 2 and the third quartile is 5. There is marked jump between that and the max of 2157.
+
+```{python}
+df = pd.read_csv("C:/Users/oscar/OneDrive/Desktop/archive/clean_df.csv")
+```
 
 ```{python}
 
