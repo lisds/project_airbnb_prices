@@ -1,5 +1,6 @@
 # Requirements for notebooks / Binderhub
 matplotlib
+seaborn
 pandas >= 1.5
 xlrd
 openpyxl
