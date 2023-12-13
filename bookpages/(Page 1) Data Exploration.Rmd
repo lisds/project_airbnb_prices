@@ -55,6 +55,7 @@ data.head()
 
 | Column                                  | Description                                               |
 |-----------------------------------------|-----------------------------------------------------------|
+| id (Index)                              | The listing identification number                          |
 | host_id                                 | AirBnB host identification number                          |
 | host_name                               | Host name                                                  |
 | host_since                              | Host join date                                             |
@@ -68,7 +69,7 @@ data.head()
 | host_lifetime_listings_count            | Number of all-time listings                                |
 | host_verifications                      | Host verification methods                                 |
 | host_identity_verified                  | Host is a verified host                                    |
-| calculated_host_listings_count          | Total count of listings                                    |
+| calculated_host_listings_count          | Total count of unique property listings                                    |
 | calculated_host_listings_count_entire_homes | Total count of entire home listings                   |
 | calculated_host_listings_count_private_rooms | Total count of private room listings                 |
 | calculated_host_listings_count_shared_rooms | Total count of shared room listings                   |
@@ -113,6 +114,17 @@ numerical_data = data_tools.group_data(data,'numerical')
 numerical_data.describe()
 ```
 
+## Standout Stats
+
+Hosting Listings - Large difference between Max and the upper quartile, suggesting there is a small number with a high concentration.  
+Calculated Host Listings count - Large difference between the max number or listings and max number of properties.  
+Maximum nights - London has 90 day limit on stays, but this data seems to show that the second quartile for max nights is exactly 1 year.  
+Maximum nights average bookings - The first quartile seems to be 90 days but the second and third seem to be just over 3 years.  
+Reviews - The number of reviews count 69344 does not match up with the review scores counts, there is roughly 25% more rows with reviews than there are rows with actual review scores
+
+
+
+
 ### Host Listings
 
 
@@ -127,3 +139,11 @@ print(host_listings_count.describe())
 ```
 
 We can see here that the first quartile is 1, the second quartile is 2 and the third quartile is 5. There is marked jump between that and the max of 2157.
+
+```{python}
+df = pd.read_csv("C:/Users/oscar/OneDrive/Desktop/archive/clean_df.csv")
+```
+
+```{python}
+
+```
