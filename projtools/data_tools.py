@@ -1,13 +1,15 @@
 # projtools/data_tools.py
 import pandas as pd
 from pathlib import Path
+pd.set_option('display.max_columns', None)
 
 def data_setup():
     """
     Load and clean the project data.
 
     Reads the project data from the CSV file, sets the 'id' column as the index,
-    removes the '$' from the 'price' column, renames columns for better clarity,
+    removes '\$,' from the 'price' column, and converts from dollars to pounds 
+    for the time period of the dataset, renames columns for better clarity,
     and drops unnecessary columns. Lastly, it reorders the columns to group
     related information together.
 
@@ -26,14 +28,17 @@ def data_setup():
     # Setting the index
     data = raw_data.set_index('id')
 
-    # Removing '$' from the 'price' column
-    data['price'] = data['price'].str.replace('$', '')
+    # Cleaning 'price' column and converting to a float
+    data['price'] = data['price'].replace('[\$,]', '', regex=True).astype(float)
+
+    #Converting the price from dollars to pounds using the exchange rate from September 2022  {cite}'exchangeratesuk_2022'
+    data['price'] = data['price'] * 0.9348
     
     # Renaming columns
     data = data.rename(columns={
         'neighborhood_overview': 'neighbourhood_description',
         'neighbourhood_cleansed': 'neighbourhood_location',
-        'price': 'price_per_night_$',
+        'price': 'price_per_night_£',
         'host_total_listings_count': 'host_lifetime_listings_count',
         'minimum_nights_avg_ntm': 'minimum_nights_avg_bookings',
         'maximum_nights_avg_ntm': 'maximum_nights_avg_bookings',
@@ -55,7 +60,7 @@ def data_setup():
         'calculated_host_listings_count_shared_rooms',
         'name', 'description', 'neighbourhood_location',
         'neighbourhood_description', 'latitude', 'longitude', 'property_type', 'room_type',
-        'accommodates', 'bathrooms_text', 'bedrooms', 'beds', 'amenities', 'price_per_night_$',
+        'accommodates', 'bathrooms_text', 'bedrooms', 'beds', 'amenities', 'price_per_night_£',
         'minimum_nights', 'maximum_nights', 'minimum_nights_avg_bookings', 'maximum_nights_avg_bookings', 'instant_bookable',
         'number_of_reviews',
         'review_scores_rating', 'review_scores_accuracy', 'review_scores_cleanliness',
@@ -90,7 +95,7 @@ def group_data(data, data_type):
                      'calculated_host_listings_count_private_rooms', 'calculated_host_listings_count_shared_rooms']]
     elif data_type == 'property':
         return data[['name', 'description', 'property_type', 'room_type', 'accommodates', 'bathrooms_text',
-                      'bedrooms', 'beds', 'amenities', 'price_per_night_$', 'minimum_nights', 'maximum_nights',
+                      'bedrooms', 'beds', 'amenities', 'price_per_night_£', 'minimum_nights', 'maximum_nights',
                       'minimum_nights_avg_bookings', 'maximum_nights_avg_bookings', 'instant_bookable']]
     elif data_type == 'review':
         return data[['review_scores_rating', 'number_of_reviews', 'review_scores_accuracy',
@@ -101,7 +106,7 @@ def group_data(data, data_type):
         return data[['neighbourhood_location', 'neighbourhood_description', 'latitude', 'longitude']]
     elif data_type == 'numerical':
         return data[['host_listings_count', 'host_lifetime_listings_count', 'calculated_host_listings_count', 
-                      'calculated_host_listings_count_entire_homes', 'calculated_host_listings_count_private_rooms', 
+                      'calculated_host_listings_count_entire_homes', 'calculated_host_listings_count_private_rooms', 'price_per_night_£',  
                       'accommodates', 'bedrooms', 'beds', 'minimum_nights', 'maximum_nights', 'minimum_nights_avg_bookings', 
                       'maximum_nights_avg_bookings', 'number_of_reviews', 'review_scores_rating', 'review_scores_accuracy', 
                       'review_scores_cleanliness', 'review_scores_checkin', 'review_scores_communication', 'review_scores_communication', 
@@ -109,3 +114,15 @@ def group_data(data, data_type):
     else:
         raise ValueError("Invalid data_type. Choose from 'host', 'property', 'review', 'location', or 'numerical'.")
 
+def Top_5_Frequency (dataframe, column_name):
+  """
+    Print the top 5 most frequent neighbourhoods from the specified column in the given dataframe.
+
+    Args:
+    dataframe (pandas.DataFrame): The dataframe containing the neighbourhood data.
+    column_name (str): The name of the column with neighbourhood data.
+
+    Returns:
+    pandas.Series: A series with the top 5 neighbourhoods and their counts.
+    """
+  return dataframe[column_name].value_counts().head(5)
