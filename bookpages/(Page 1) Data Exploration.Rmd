@@ -23,27 +23,22 @@ The Dataset for this project contains listing data for Air BnB for London, Septe
 
 ### Data cleaning
 The dataset we are using comes precleaned/processed, as such cleaning is a relatively straight forward task with minor alterations made mostly for clarity.  
-(For specifics please see the cleaning.py file within the projtools directory)
+(For specifics please see the data_tools.py file within the projtools directory and the function data_setup)
 
 Overview  
 -Setting the 'id' column to the pandas index  
 -Renaming columns for clarity  
 -Removing special characters  
--Dropping unnecessary columns
+-Dropping unnecessary columns  
 -Reorders columns to group related data
 
 ### Data Description
 The data set contains 48 Columns and 69351 rows/entries. The columns contain data pertaining to the property, the host, the location and reviews.  
+  
 To explore the dataset run the following cells.
 
 ```{python}
-import pandas as pd
-from pathlib import Path
-import matplotlib.pyplot as plt
-import seaborn as sns
 from projtools import data_tools, plotting_tools  
-pd.set_option('display.max_columns', None)
-
 ```
 
 ```{python}
@@ -117,21 +112,36 @@ numerical_data.describe()
 
 ## Standout Stats
 
-Hosting Listings - Large difference between Max and the upper quartile, suggesting there is a small number with a high concentration.  
-Calculated Host Listings count - Large difference between the max number or listings and max number of properties.  
-Maximum nights - London has 90 day limit on stays, but this data seems to show that the second quartile for max nights is exactly 1 year.  
-Maximum nights average bookings - The first quartile seems to be 90 days but the second and third seem to be just over 3 years.  
-Reviews - The number of reviews count 69344 does not match up with the review scores counts, there is roughly 25% more rows with reviews than there are rows with actual review scores
+1) **Hosting Listings** - There is a large difference between the maximum and the upper quartile, suggesting a small number of hosts with a high concentration of listings.  
+ According to the article by Temperton (2020) {cite}`temperton_2020`, data compiled by London City Hall in May 2019 indicated that 1% of Airbnb hosts were responsible for 15% of active listings on Airbnb. The dataset for this project, from September 2022, allows for an analysis of any changes over the past three years.
+  
+2) **Calculated Host Listings Count** - A significant difference is observed between the maximum number of listings and the maximum number of properties.  
+As stated by Temperton (2020) {cite}`temperton_2020`, "80,770 properties in London were listed on Airbnb." This dataset enables the calculation of the difference between the total number of listings and properties, providing a more accurate representation of the number of properties listed on Airbnb. This can help validate Airbnb's claim that the London City Council's estimates of housing stock on their platform are inflated.
+
+3) 
+    a. **Maximum Nights** - Although London imposes a 90-day limit on stays, the data indicates that the second quartile for maximum nights is exactly one year.  
+    b. **Maximum Nights Average Bookings** - The first quartile appears to be 90 days, but the second and third quartiles are just over three years.   
+    Data compiled by Camden Council and cited by {cite}`temperton_2020` reveals that, of the 7,100 whole properties listed on platforms like Airbnb and Booking.com in 2019, 48% exceeded the 90-day legal limit.
+
+4) **Price per night $** - The mean price was 165.66, however the 1st and 2nd quartiles were 51.41 and 93.48 respectively.  
+According to City Hall, properties in London listed on short-term rental sites rake in an average of £109 per night. Were they rented out to long-term tenants, they would make £58 per night {cite}`temperton_2020`. 
+
+5) **Reviews** - The count of 69,344 reviews does not align with the review scores count, indicating approximately 25% more rows with reviews than rows with actual review scores.
 
 
 
+### Further things to explore from "Airbnb has devoured London – and here’s the data that proves it" Temperton 2020
+
+6) "Nowhere in London is the impact of short-term rentals felt more keenly than in Westminster. New data compiled using AirDNA, an independent analytics platform, show that as of January 2020 there were 8,836 short-term rental listings in the borough."
+
+```{python}
+data_tools.Top_5_Frequency(data, 'neighbourhood_location')
+```
 
 ### Host Listings
 
 
-According to a wired article {cite}`temperton_2020` , citing data compiled by London city hall, in May 2019 1% of Airbnb hosts were behind 15% of active listings on Airbnb.
 
-This Dataset is from September 2022 so we can test whether over the 3 years there has been any change.
 
 ```{python}
 host_listings_count = numerical_data['host_listings_count']
@@ -140,10 +150,6 @@ print(host_listings_count.describe())
 ```
 
 We can see here that the first quartile is 1, the second quartile is 2 and the third quartile is 5. There is marked jump between that and the max of 2157.
-
-```{python}
-df = pd.read_csv("C:/Users/oscar/OneDrive/Desktop/archive/clean_df.csv")
-```
 
 ```{python}
 
