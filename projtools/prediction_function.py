@@ -86,6 +86,6 @@ def analyze_data(var1, var2, var3, varZ, ID_Z):
 
 # Example usage of the function
     
-analyze_data('accommodates', 'number_of_reviews', 'host_listings_count', 'price_per_night_£', 106332)
+# analyze_data('accommodates', 'number_of_reviews', 'host_listings_count', 'price_per_night_£', 106332)
 
  
