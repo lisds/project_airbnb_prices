@@ -151,6 +151,36 @@ print(host_listings_count.describe())
 
 We can see here that the first quartile is 1, the second quartile is 2 and the third quartile is 5. There is marked jump between that and the max of 2157.
 
+
+## Prices
+
+```{python}
+from IPython.display import display, HTML
+display(HTML("<style>.jp-OutputArea-output {display:flex}</style>"))
+property_data = data_tools.group_data(data,'property')
+property_data.head()
+```
+
+
+
+```{python}
+mean_price_per_bedroom = property_data.groupby(['bedrooms'])[['price_per_night_£']].mean()
+mean_price_per_bedroom
+```
+
+```{python}
+mean_price_per_bedroom.plot()
+```
+
+```{python}
+bedroom_counts = property_data['bedrooms'].value_counts()
+bedroom_counts
+```
+
+```{python}
+mean_price_per_bedroom[:5].plot()
+```
+
 ```{python}
 
 ```
