@@ -26,6 +26,39 @@ from pathlib import Path
 from projtools.cleaning import data_setup
 ```
 
+## Prices
+
+```{python}
+from IPython.display import display, HTML
+display(HTML("<style>.jp-OutputArea-output {display:flex}</style>"))
+property_data = data_tools.group_data(data,'property')
+property_data.head()
+```
+
+
+
+```{python}
+mean_price_per_bedroom = property_data.groupby(['bedrooms'])[['price_per_night_£']].mean()
+mean_price_per_bedroom
+```
+
+```{python}
+mean_price_per_bedroom.plot()
+```
+
+```{python}
+bedroom_counts = property_data['bedrooms'].value_counts()
+bedroom_counts
+```
+
+```{python}
+mean_price_per_bedroom[:5].plot()
+```
+
+```{python}
+
+```
+
 ### Data
 It has this many columns the columns are lorem ipsum etc etc
 
