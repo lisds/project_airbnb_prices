@@ -18,19 +18,22 @@ var1 = 'accommodates'
 var2 = 'number_of_reviews'
 var3 = 'host_listings_count'
 varZ = 'price_per_night_£'
-ID_X = 284532
+ID_X = 17402
+
+ID_Z = ID_X
+
 
 cleaned_data = numerical_data.dropna(subset=[var1, var2, var3, varZ])
 standardised_cleaned_data = (cleaned_data - cleaned_data.mean()) / cleaned_data.std()
 
-# Linear regression model
+# fit a linear regression 
 X = standardised_cleaned_data[[var1, var2]]
 Y = standardised_cleaned_data[var3]
 model = LinearRegression().fit(X, Y)
 a, b = model.coef_
 c = model.intercept_
 
-# Function to calculate z-coordinate on the plane and the error distance
+# calculate z-coordinate on the plane and the error distance
 def calculate_distance_to_plane(row, plane_coeffs):
     x, y, z_actual = row[var1], row[var2], row[var3]
     a, b, intercept = plane_coeffs
@@ -42,14 +45,11 @@ def calculate_distance_to_plane(row, plane_coeffs):
 
 
 def find_closest_points(data, reference_row, num_points, plane_coeffs):
-    # Calculate distances
+    # Calculate distances 
     distances = data.apply(lambda row: calculate_distance_to_plane(row, plane_coeffs), axis=1)
-
-    # Ensure distances are numeric
-    distances_numeric = pd.to_numeric(distances, errors='coerce')
-
     # Return the n smallest distances
-    return distances_numeric.nsmallest(num_points)
+    return distances.nsmallest(num_points)
+
 
 
 # Function to calculate average error and coordinate
@@ -78,8 +78,8 @@ def predict_point(average_z_on_plane, average_error, plane_coeffs):
 
 differences = []
 
-# Loop through the first 10 rows
-for index, row in cleaned_data.iloc[:5].iterrows():
+# Loop through the first a  rows
+for index, row in cleaned_data.iloc[:10].iterrows():
     # Standardize the current row
     standardized_row = (row - cleaned_data.mean()) / cleaned_data.std()
     
@@ -107,9 +107,6 @@ differences_df = pd.DataFrame({
 })
 differences_df = differences_df.set_index('IDs')
 
-print(differences_df.head())
-
-
 
 plt.figure(figsize=(10, 6))
 sns.histplot(differences, kde=True, color="blue", stat="density", linewidth=0)
@@ -127,12 +124,23 @@ plt.plot(x, p, 'k', linewidth=2, label=f"Fit: mu = {mu:.2f}, std = {std:.2f}")
 plt.legend()
 plt.show()
 
+
+ID_X_diff = differences_df.loc[ID_X]
+ID_X_diff = ID_X_diff.iloc[0]
+
+proportion_higher = np.count_nonzero(differences > ID_X_diff) / len(differences)
+
+if proportion_higher < 0.05:
+    print("The difference bewteen the predicted value and the actual value is not Significant")
+else:print("The difference bewteen the predicted value and the actual value is not Significant")
+
+
 # for you specific property in question you can then test to see whether there is a large difference from the expected result 
 # if there is you can test whether this result is significant or not 
 
 # One-tailed hypothesis test for ID_X
-ID_X_diff = differences_df.loc[ID_X]
-population_mean = differences_df['Difference'].mean()
+#ID_X_diff = differences_df.loc[ID_X]
+#population_mean = differences_df['Difference'].mean()
 
 # create a hypothesis test to see if its significant 
 # then run loads of them through the test to highlight the ones that could be dodgy 
