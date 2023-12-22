@@ -2,7 +2,9 @@
 import pandas as pd
 from pathlib import Path
 import numpy as np
+import numpy as np
 pd.set_option('display.max_columns', None)
+
 
 
 def data_setup():
@@ -56,11 +58,17 @@ def data_setup():
     # Dropping unnecessary columns
     data = data.drop(columns=['listing_url', 'host_picture_url', 'host_url'])
 
+    #Adding columns
+    # Categorizing hosts by number of listings they have in London
+    data['host_listings_group'] = pd.cut(data['calculated_host_listings_count'], 
+                           bins=[0, 1, 10, 100, np.inf],
+                           labels=['1 Property', '2-10 Properties', '11-100 Properties', '100+ Properties'])
+
     # Reordering columns
     data = data[[
         'host_id', 'host_name', 'host_since', 'host_location', 'host_about',
         'host_response_time', 'host_response_rate', 'host_acceptance_rate',
-        'host_is_superhost', 'host_listings_count',
+        'host_is_superhost', 'host_listings_group', 'host_listings_count',
         'host_lifetime_listings_count', 'host_verifications',
         'host_identity_verified', 'calculated_host_listings_count',
         'calculated_host_listings_count_entire_homes',

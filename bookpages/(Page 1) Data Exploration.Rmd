@@ -109,6 +109,20 @@ from projtools import plotting_tools as pt
 data = dt.data_setup()
 data.head()
 ```
+```{python}
+#Run these cells to get started
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from projtools import data_tools as dt
+from projtools import plotting_tools as pt 
+```
+
+```{python}
+#Full pandas dataframe
+data = dt.data_setup()
+data.head()
+```
 
 ### Descriptive Stats
 
