@@ -13,16 +13,15 @@ jupyter:
 ---
 
 # Airbnb Datascience Project
-
-
-## Introduction
+## Page 1 Data exploration
+### Introduction
 
 <!-- #region -->
 #### Data sourcing
 The Dataset for this project contains listing data for Airbnb for London, up to September 2022. The dataset used is a precleaned dataset from Kaggle, that was sourced from http://insideairbnb.com.
 
 #### Cleaning
-The dataset comes in a relatively clean state, as such cleaning is a relatively straight forward task with minor alterations made mostly for clarity and tailoring the dataset to the projects needs.  
+The dataset comes in a relatively clean state, as such cleaning is a straight forward task with minor alterations made mostly for clarity and tailoring the dataset to the projects needs.    
 (For specifics please see go to the function and examine the function "data_setup()" found in "\projtools\data_tools.py")  
 
 Overview  
@@ -97,9 +96,6 @@ The columns contain data pertaining to the property, host, location and reviews.
 
 ```{python}
 #Run these cells to get started
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 from projtools import data_tools as dt
 from projtools import plotting_tools as pt 
 ```
@@ -109,6 +105,7 @@ from projtools import plotting_tools as pt
 data = dt.data_setup()
 data.head()
 ```
+
 ### Descriptive Stats
 
 ```{python}
@@ -125,30 +122,31 @@ data.describe()
    - A slight difference exists between the calculated host listings count and calculated host listings count for entire homes, suggesting that most properties are entire homes rather than individual rooms.
    - According to {cite}`temperton_2020`, there were "80,770 properties in London listed on Airbnb." However, this dataset contains 69,351 entries, suggesting a potential decline in listings. Airbnb claim in the article that each listing may represent multiple rooms within a single property, impacting the total property count thus the reported count is unreliable.
 
-3. **Maximum Nights**:
+3. **Maximum Nights & Maximum Nights Average Bookings**:
    - Despite London's 90-day stay limit, the data indicates that the second quartile for maximum nights corresponds to exactly one year.
-
-4. **Maximum Nights Average Bookings**:
    - The first quartile appears to be around 90 days, but the second and third quartiles extend to just over three years.
-   - Data compiled by Camden Council and cited by {cite}`temperton_2020` suggests that 48% of properties exceed the 90-day legal limit. The dataset implies a potentially higher percentage.
+   - Data compiled by Camden Council and cited by {cite}`temperton_2020` suggests that 48% of properties in camden exceed the 90-day legal limit. The dataset implies a potentially higher percentage across London.
 
-5. **Price per Night £**:
+4. **Price per Night £**:
    - The mean price per night is £165.66, with the 1st and 2nd quartiles at £51.41 and £93.48, respectively, suggesting the availability of more affordable properties.
    - According to City Hall, properties in London listed on the short-term rental market make an average of £109 per night. In contrast, if they were rented out to long-term tenants, they could yield an average of £58 per night {cite}`temperton_2020`.
 
 
 ### Further things to explore from "Airbnb has devoured London – and here’s the data that proves it" Temperton 2020
 
-5) Westminster is the most affected area in london by short-term rentals in January 2020 there were 8,836 short-term rental listings in the borough.
+5. **Location**: Westminster is the most affected area in london by short-term rentals, in January 2020 there were 8,836 short-term rental listings in the borough.
 
 ```{python}
 data['neighbourhood_location'].value_counts().head(5)
+
 ```
 
 This statement is corroborated by the data, while there are less rentals in Westminster than in January 2020 Westminster is the most popular borough for listings.
 
 
-# Initial Exploration
+## Exploration
+
+
 
 
 
@@ -179,23 +177,28 @@ percentage_hosts_with_1_listing = (hosts_with_1_listing / total_listings) * 100
 ```
 
 ```{python}
-#Results
 #Graph
 pt.Distribution_of_Listings_Among_Hosts(host_listing_counts)
-#Statements
+#Results
 print(f"{percentage_hosts_with_1_listing:.2f}% of hosts have 1 listing")
 print(f"The Top 1% of Hosts have over {top_1_percent_threshold} listings")
 print(f"The max number of listings for a single host is : {top_1_percent_hosts_listings.max()}")
 
 #Graph
 pt.Market_Share_by_Host_Groups(host_listing_counts, top_1_percent_threshold, total_listings)
-#Statements
+#Results
 print(f"The Top 1% of hosts control {percent_listings_top_1:.2f}% of the market")
 ```
 
-In 2022 1% of hosts accounted for 17% of the London market on Airbnb this is a 2% increase from the reports from city hall in 2019. Additionally we can see 54% of hosts have only 1 listing. To be in the Top 1% you need to have over 9 listings, however there is a large spread within the Top 1%. The minimum number of listings within the top 1% is 9 and the maximum number is 285. The scale of these operations is not comparable, thus it is worth grouping the hosts by the scale of operation.
+**Statement :** In 2019 1% of hosts accounted for 15% of listings.  
+**Question :** What percentage of listings do the top 1% of hosts account for in 2022?
+
+In 2022 1% of hosts accounted for 17% of the London market on Airbnb this is a 2% increase from the reports from city hall in 2019. Additionally we can see 54% of hosts have only 1 listing.  
+  
+To be in the Top 1% you need to have over 9 listings, however there is a large spread within the Top 1%. The minimum number of listings within the top 1% is 9 and the maximum number is 285. The scale of these operations is not comparable, thus it is worth grouping the hosts by the scale of operation.
 
 ```{python}
+#Grouping hosts by scale of operation
 host_listings_group = dt.Categorize_Host_Listings(host_listing_counts)
 
 # Counting the number of hosts in each group and percentage
@@ -205,38 +208,38 @@ host_listings_group_percentages = (host_listings_group_counts / len(host_listing
 #Adding as a column to the main df
 data = dt.Add_host_group(data, host_listings_group)
 
-#Printing results
+#Results
 for category in host_listings_group_counts.index:
     count = host_listings_group_counts[category]
     percentage = host_listings_group_percentages[category]
     print(f"{category} {count} : {percentage:.2f}%")
+
 ```
 
 ### Number of properties in London listed on Airbnb
 
-**Statement** : The number of listings does not represent how much housing stock is listed on Airbnb  
-**Question** : How many unique locations are listed on Airbnb?
+**Statement :**  The number of listings does not represent how much housing stock is listed on Airbnb  
+**Question :**  How many unique locations are listed on Airbnb?
 
 ```{python}
 #Method
-
-# Create a column combining latitude and longitude
+#Create a column combining latitude and longitude
 data['coords'] = list(zip(data['latitude'], data['longitude']))
 
-# Count the number of unique combinations of coordinates
+#Count the number of unique combinations of coordinates
 unique_properties = data['coords'].nunique()
 
-# Print the results
+#Results
 print(f"Estimated number of properties from longitude and latitude: {unique_properties}")
 print(f"Number of listings in London on Airbnb: {len(data)}")
 
 ```
 
-This method works out how many unique combinations there are of latitude and longitude there are within the Dataset. The result suggests that there are marginally lower unique properties that total listings on the platform, therefore the claim by Airbnb that the listings are inflated appears to be false.
+This method works out how many unique combinations there are of latitude and longitude within the Dataset. The result suggests that there are marginally lower unique properties that total listings on the platform, therefore the claim by Airbnb that the listings are inflated appears to be false.
 
 
 ### Number of properties being used for short term rental and long term rental  
-**Statement** The maximum number of nights legally allowed for short term rental in london is 90 days. {cite}`temperton_2020` More than 10,000 Airbnb listings in London are in breach of the city’s 90-day limit on short-term rentals, in fact 48% are in breach of the 90 day limit.  
+**Statement :** The maximum number of nights legally allowed for short term rental in london is 90 days. {cite}`temperton_2020` More than 10,000 Airbnb listings in London are in breach of the city’s 90-day limit on short-term rentals.  
 **Question** How many listings are in breach of this limit?
 
 ```{python}
@@ -258,47 +261,54 @@ max_night_avg_bookings = data[data['maximum_nights_avg_bookings'] <= 1500]
 under_90_days = (data['maximum_nights_avg_bookings'] <= 90).sum()
 between_91_and_365_days = ((data['maximum_nights_avg_bookings'] > 90) & (data['maximum_nights_avg_bookings'] <= 365)).sum()
 above_365_days = (data['maximum_nights_avg_bookings'] > 365).sum()
+
 ```
 
 ```{python}
-print(f"Listings with maximum nights over 90 days: {listings_over_90_days_max_nights} : {percent_over_90_days_max_nights:.2f}%")
-print()
 #Graph
 pt.Plot_Average_Max_Nights_Booked_Distribution(max_night_avg_bookings)
 
-# Print results
-print(f"Listings with average bookings over 90 days: {listings_over_90_days_avg_bookings} : {percent_over_90_days_avg_bookings:.2f}%")
+#Results
+print(f"Listings with maximum nights over 90 days: {listings_over_90_days_max_nights} {percent_over_90_days_max_nights:.2f}%")
+print()
+print("GRAPH DATA")
+print(f"Listings with average maximum nights booked over 90 days: {listings_over_90_days_avg_bookings} {percent_over_90_days_avg_bookings:.2f}%")
+print()
 print(f"Listings with maximum nights less than 90 days: {under_90_days}")
 print(f"Listings with maximum nights between 90 and 365 days: {between_91_and_365_days}")
 print(f"Listings with maximum nights greater than 365 days: {above_365_days}")
 ```
 
-The data here suggests that approximately 2/3rds of listings are in breach of the 90 day limit, and that 3/4s of the listings on the platform are on average booked for over 90 days. This seems to suggest that in 2022 Airbnb is predominantly being used for long term rent rather than short term rent as the platform is intended.
+The data here suggests that approximately 2/3rds of listings are in breach of the 90 day limit, and that 3/4s of the listings on the platform are on average booked for over 90 days. This seems to suggest that in 2022 Airbnb is predominantly being used for long term rental rather than short term rental as the platform is intended.
 
-The graphs first peak is at 10 days at about 10000. Roughly 17500 properties out of the total fall below the 90 day mark being, which is the cut off point for what is considered short term rental. The next peak is around 1 year with approximately 9500 and the final and largest peak is aroud 3 years roughly being 38,000. This corroborates the claims that Airbnb and the short term rental market is being used as an alternative to the housing rental market.
+The graphs first peak is at 10 days at about 10000. Roughly 17500 properties out of the total fall below the 90 day mark, which is the cut off point for short term rental. The next peak is around 1 year with approximately 9500 and the final and largest peak is aroud 3 years roughly being 38,000. This corroborates the claims that Airbnb and the short term rental market is being used as an alternative to the housing rental market.
 
-We can now add long term rentals to the data.
+We can now add whether a property is being used as a short term or long term to the data.
 
 ```{python}
+#Adding Long term rental column
 data = dt.Add_long_term_rental(data)
 ```
 
 ### Price per night, how much are people being charged on the platform?
-**Statement** It is more lucrative to rent out property on Airbnb than it is on the housing market.  
-**Question** How much does it cost to rent a property long term on Airbnb compared to the housing market?
+**Statement :** It is more lucrative to rent out property on Airbnb than it is on the housing market.  
+**Question :** How much does it cost to rent a property long term on Airbnb compared to the housing market?
 
 ```{python}
+#Method
 # Filter the data for listings with maximum nights over 90 days but less than 1500
 long_term_listings = data[(data['maximum_nights_avg_bookings'] > 90) & (data['maximum_nights_avg_bookings'] < 1500)]
 
 # Calculate the mean price for long_term_listings
 mean_price = long_term_listings['price_per_night_£'].mean()
 
+```
+
+```{python}
 #Graph
 pt.Price_Per_Night_Distribution(long_term_listings)
-#Print Results
+#Results
 print(f'Mean price per night: £{mean_price:.2f}')
-
 ```
 
 By mean average, it does seem to be more expensive to rent on Airbnb than it is to rent on the housing market. The average price per night for the rental housing market was £85.57 per night {cite}statista-london-rental, whereas the average price per night on Airbnb for the same time period was double that at £179.29 per night. 
@@ -309,8 +319,8 @@ Interestingly it also appears that the largest spread of prices is at the 1 year
 ### Summary
 
 
-Airbnb is being used in london predominantly for long term rentals and it is using up a significant portion of the housing stock to do this. There are a variety of different actors on the platform with the majority being individuals who only have 1 property, however there are individuals/groups who use the platform as a large scale property business. 
+Airbnb is being used in london predominantly for long term rentals and it is using up a significant portion of the housing stock to do this. There are a variety of different actors on the platform with the majority being individuals who only have 1 property, however there are individuals/groups who use the platform as a large scale property businesses. 
 
 Further avenues to explore will involve  
--Predicting which properties are likely to be used for long term and short term rentals   
--Predicting the price of a Listing
+-Predicting which properties are likely to be used for long term and short term rentals  
+-Predicting the price of a listing
