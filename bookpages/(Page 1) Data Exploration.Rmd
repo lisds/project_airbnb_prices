@@ -167,6 +167,11 @@ This statement is corroborated by the data, while there are less rentals in West
 
 
 
+# Print the estimated number of unique properties
+print(f"Estimated number of properties in London listed on Airbnb: {unique_properties}")
+print(f"Number of listings in London on Airbnb: {len(data)}")
+
+```
 
 
 ### Host listing concentration  

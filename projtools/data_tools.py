@@ -2,10 +2,7 @@
 import pandas as pd
 from pathlib import Path
 import numpy as np
-import numpy as np
 pd.set_option('display.max_columns', None)
-
-
 
 def data_setup():
     """
@@ -144,7 +141,7 @@ def Top_5_values(dataframe, column_name):
     pandas.Series: A series with the top 5 values and their counts.
     """
     return dataframe[column_name].value_counts().head(5)
-
+  
 def Categorize_Host_Listings(host_listing_counts):
     """
     Categorize hosts by the unique number of listings they have.
