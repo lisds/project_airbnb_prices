@@ -102,6 +102,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from projtools import data_tools as dt
 from projtools import plotting_tools as pt 
+from projtools import quartile_prices as qp
 ```
 
 ```{python}
@@ -306,6 +307,73 @@ By mean average, it does seem to be more expensive to rent on Airbnb than it is 
 Interestingly it also appears that the largest spread of prices is at the 1 year and 3 year mark.
 
 
+### Invetigation of the 1 year and 3 year let duration
+
+```{python}
+
+```
+
+Not only does the graph above clearly highlight the improper use of the platform to offer long term rentals rather than short term holiday lets but it also suggests that hosts listing for durations of 1 year and 3 years, were charging significantly more than those at any other duration. 
+
+Hovewever the graph deosnt appear to suggest that all the listings that have longer durations charge more. It only appears that it is exactly 365 and 1125 were this phenomena occurs. 
+
+Thus, we did some prelimenary analysis and ivestigation to see if this really is the case. 
+
+```{python}
+# to begin we filtered the data to get the price data for 1 year and 3 years
+
+long_term_listings = data[(data['maximum_nights_avg_bookings'] > 90) & (data['maximum_nights_avg_bookings'] < 1500)]
+
+one_yr = long_term_listings[long_term_listings['maximum_nights_avg_bookings'] == 365]
+one_yr_price_nights = one_yr[['price_per_night_£']]
+
+three_yr = long_term_listings[long_term_listings['maximum_nights_avg_bookings'] == 1125]
+three_yr_price_nights = three_yr[['price_per_night_£']]
+
+# we needed to also do this for the data around the year and three year point to haves some comparise data 
+
+listings_around_one_year = long_term_listings[(long_term_listings['maximum_nights_avg_bookings'] > 330) & (long_term_listings['maximum_nights_avg_bookings'] < 400) & (long_term_listings['maximum_nights_avg_bookings'] != 365)]
+listings_around_three_year = long_term_listings[(long_term_listings['maximum_nights_avg_bookings'] > 1090) & (long_term_listings['maximum_nights_avg_bookings'] < 1160) & (long_term_listings['maximum_nights_avg_bookings'] != 1125)]
+
+# to see if there was a difference or in the data on average we found the means of 1, 3 and around each of these years
+
+one_year_mean = one_yr_price_nights['price_per_night_£'].mean() 
+three_yr_mean = three_yr_price_nights['price_per_night_£'].mean() 
+around_one_mean = listings_around_one_year['price_per_night_£'].mean()
+around_three_mean = listings_around_three_year['price_per_night_£'].mean()
+print("One year mean", one_year_mean)
+print("Three year mean", three_yr_mean)
+print("Around one year mean", around_one_mean)
+print("Around three year mean", around_three_mean)
+print("One year diff.", one_year_mean - around_one_mean)
+print("Three year diff.", three_yr_mean - around_three_mean)
+```
+
+This brief analysis brigns an interesting condradiction and also suprising result
+
+On the one hand it suggests that the listigns listings for a year are more expensive than those around it agreeign with our intitial obseravation. On the other hand the calculations also reveal that the propeties listed for three years were listed at substantially lower prices on avergae than those around the 3 year mark. 
+
+To see what was really going on other statistical methods needed to be employed as the high outliers observed on the graph above could be significantly influencing the mean results.
+
+To do this we employed the use of quatiles to represent how the data is spread within each group
+
+```{python}
+# for clarification of the working within this funciton that provide the graph below look at the quartile_prices.py file in projtools
+
+qp.plot_scatter_quartiles_multiple_dfs([one_yr, three_yr, listings_around_one_year, listings_around_three_year], 'price_per_night_£', ['one year', 'around one year', 'three year', 'listing around three year'])
+qp.plot_scatter_quartiles_multiple_dfs_whole([one_yr, three_yr, listings_around_one_year, listings_around_three_year], 'price_per_night_£', ['one year', 'around one year', 'three year', 'listing around three year'])
+```
+
+<!-- #region -->
+The two representations above are useful because they show how the data is spread within eaach group - year one, around year one etc.. Therefore we are able to get a better understanding of why we are getting condradicting results and large differences in the mean for year one and year 3. 
+
+First, lets consider the supper quartile. It appears that three quarters of all results in each group are within a small price range howver the upper quartile reveals a much larger spread of data. The larger values in this quartile appear siginificantly greater than the results in the other quartiles and therefore may have the ability to influence the mean. However, this is not true for all of the data. You would expect the listign groups with a greater numeber of results aka. 1 year and 3 years to have a higher number of these large results by chance. This is not the case and although 3 years contains the most values it has much similar values than one year or even around one year.  
+
+
+high results are not evenly disrubuted
+find out what proportion of the results give the highest x values 
+<!-- #endregion -->
+
 ### Summary
 
 
@@ -314,3 +382,31 @@ Airbnb is being used in london predominantly for long term rentals and it is usi
 Further avenues to explore will involve  
 -Predicting which properties are likely to be used for long term and short term rentals   
 -Predicting the price of a Listing
+
+```{python}
+
+```
+
+```{python}
+
+```
+
+```{python}
+
+```
+
+```{python}
+
+```
+
+```{python}
+
+```
+
+```{python}
+
+```
+
+```{python}
+
+```
