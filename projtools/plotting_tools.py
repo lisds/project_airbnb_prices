@@ -93,7 +93,6 @@ def Price_Per_Night_Distribution(data):
     plt.xlabel('Average Maximum Nights (Over 90 Days)')
     plt.ylabel('Price per Night (£)')
     plt.show()
-=======
 
 import matplotlib.pyplot as plt
 import seaborn as sns
