@@ -90,7 +90,7 @@ def Price_Per_Night_Distribution(data):
     plt.figure(figsize=(12, 8))
     sns.scatterplot(x=data['maximum_nights_avg_bookings'], y=data['price_per_night_£'])
     plt.title('Price per Night vs. Average Maximum Nights for Bookings Over 90 Days')
-    plt.xlabel('Average Maximum Nights (Over 90 Days)')
+    plt.xlabel('Average Maximum Nights Booked (Over 90 Days)')
     plt.ylabel('Price per Night (£)')
     plt.show()
 
