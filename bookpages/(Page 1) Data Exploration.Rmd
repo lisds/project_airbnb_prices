@@ -109,21 +109,6 @@ from projtools import plotting_tools as pt
 data = dt.data_setup()
 data.head()
 ```
-```{python}
-#Run these cells to get started
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-from projtools import data_tools as dt
-from projtools import plotting_tools as pt 
-```
-
-```{python}
-#Full pandas dataframe
-data = dt.data_setup()
-data.head()
-```
-
 ### Descriptive Stats
 
 ```{python}
@@ -167,13 +152,6 @@ This statement is corroborated by the data, while there are less rentals in West
 
 
 
-# Print the estimated number of unique properties
-print(f"Estimated number of properties in London listed on Airbnb: {unique_properties}")
-print(f"Number of listings in London on Airbnb: {len(data)}")
-
-```
-
-
 ### Host listing concentration  
 **Statement**: In 2019 1% of hosts accounted for 15% of listings.  
 **Question**: What percentage of listings do the top 1% of hosts account for in 2022?
@@ -215,9 +193,7 @@ pt.Market_Share_by_Host_Groups(host_listing_counts, top_1_percent_threshold, tot
 print(f"The Top 1% of hosts control {percent_listings_top_1:.2f}% of the market")
 ```
 
-In 2022 1% of hosts accounted for 17% of the London market on Airbnb this is a 2% increase from the reports from city hall in 2019. Additionally we can see 54% of hosts have only 1 listing.  
-  
-To be in the Top 1% you need to have over 9 listings, however there is a large spread within the Top 1%. The minimum number of listings within the top 1% is 9 and the maximum number is 285. The scale of these operations is not comparable, thus it is worth grouping the hosts by the scale of operation.
+In 2022 1% of hosts accounted for 17% of the London market on Airbnb this is a 2% increase from the reports from city hall in 2019. Additionally we can see 54% of hosts have only 1 listing. To be in the Top 1% you need to have over 9 listings, however there is a large spread within the Top 1%. The minimum number of listings within the top 1% is 9 and the maximum number is 285. The scale of these operations is not comparable, thus it is worth grouping the hosts by the scale of operation.
 
 ```{python}
 host_listings_group = dt.Categorize_Host_Listings(host_listing_counts)
@@ -234,9 +210,6 @@ for category in host_listings_group_counts.index:
     count = host_listings_group_counts[category]
     percentage = host_listings_group_percentages[category]
     print(f"{category} {count} : {percentage:.2f}%")
-
-
-
 ```
 
 ### Number of properties in London listed on Airbnb
@@ -285,16 +258,16 @@ max_night_avg_bookings = data[data['maximum_nights_avg_bookings'] <= 1500]
 under_90_days = (data['maximum_nights_avg_bookings'] <= 90).sum()
 between_91_and_365_days = ((data['maximum_nights_avg_bookings'] > 90) & (data['maximum_nights_avg_bookings'] <= 365)).sum()
 above_365_days = (data['maximum_nights_avg_bookings'] > 365).sum()
-
 ```
 
 ```{python}
+print(f"Listings with maximum nights over 90 days: {listings_over_90_days_max_nights} : {percent_over_90_days_max_nights:.2f}%")
+print()
+#Graph
 pt.Plot_Average_Max_Nights_Booked_Distribution(max_night_avg_bookings)
 
 # Print results
-print(f"Listings with maximum nights over 90 days: {listings_over_90_days_max_nights} : {percent_over_90_days_max_nights:.2f}%")
 print(f"Listings with average bookings over 90 days: {listings_over_90_days_avg_bookings} : {percent_over_90_days_avg_bookings:.2f}%")
-print()
 print(f"Listings with maximum nights less than 90 days: {under_90_days}")
 print(f"Listings with maximum nights between 90 and 365 days: {between_91_and_365_days}")
 print(f"Listings with maximum nights greater than 365 days: {above_365_days}")
@@ -302,13 +275,9 @@ print(f"Listings with maximum nights greater than 365 days: {above_365_days}")
 
 The data here suggests that approximately 2/3rds of listings are in breach of the 90 day limit, and that 3/4s of the listings on the platform are on average booked for over 90 days. This seems to suggest that in 2022 Airbnb is predominantly being used for long term rent rather than short term rent as the platform is intended.
 
-The graphs first peak is at 10 days at about 10000. Roughly 17500 properties out of the total fall below the 90 day mark being, which is the cut off point for what is considered short term rental.
+The graphs first peak is at 10 days at about 10000. Roughly 17500 properties out of the total fall below the 90 day mark being, which is the cut off point for what is considered short term rental. The next peak is around 1 year with approximately 9500 and the final and largest peak is aroud 3 years roughly being 38,000. This corroborates the claims that Airbnb and the short term rental market is being used as an alternative to the housing rental market.
 
-The next peak is around 1 year with approximately 9500 and the final and largest peak is aroud 3 years roughly being 38,000.
-
-This corroborates the claims that Airbnb and the short term rental market is being used as an alternative to the housing rental market.
-
-We can now add this to the data.
+We can now add long term rentals to the data.
 
 ```{python}
 data = dt.Add_long_term_rental(data)
@@ -342,6 +311,6 @@ Interestingly it also appears that the largest spread of prices is at the 1 year
 
 Airbnb is being used in london predominantly for long term rentals and it is using up a significant portion of the housing stock to do this. There are a variety of different actors on the platform with the majority being individuals who only have 1 property, however there are individuals/groups who use the platform as a large scale property business. 
 
-Further avenues to explore will involve
--Predicting which properties are likely to be used for long term and short term rentals  
+Further avenues to explore will involve  
+-Predicting which properties are likely to be used for long term and short term rentals   
 -Predicting the price of a Listing
