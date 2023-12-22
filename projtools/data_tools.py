@@ -56,11 +56,19 @@ def data_setup():
     # Dropping unnecessary columns
     data = data.drop(columns=['listing_url', 'host_picture_url', 'host_url'])
 
-    #Adding columns
+    #Adding column
     # Categorizing hosts by number of listings they have in London
-    data['host_listings_group'] = pd.cut(data['calculated_host_listings_count'], 
-                           bins=[0, 1, 10, 100, np.inf],
-                           labels=['1 Property', '2-10 Properties', '11-100 Properties', '100+ Properties'])
+    # Calculate the total number of distinct listings for each host
+    host_listing_counts = data.groupby('host_id')['calculated_host_listings_count'].first()
+
+    # Categorize hosts based on the unique number of listings
+    host_listings_group = pd.cut(host_listing_counts, 
+                                    bins=[0, 1, 10, 100, np.inf], 
+                                    labels=['1 Property', '2-10 Properties', '11-100 Properties', '100+ Properties'])
+
+    # Create a new column
+    data['host_listings_group'] = host_listings_group
+
 
     # Reordering columns
     data = data[[
@@ -68,7 +76,7 @@ def data_setup():
         'host_response_time', 'host_response_rate', 'host_acceptance_rate',
         'host_is_superhost', 'host_listings_group', 'host_listings_count',
         'host_lifetime_listings_count', 'host_verifications',
-        'host_identity_verified', 'calculated_host_listings_count',
+        'host_identity_verified', 'calculated_host_listings_count', 'host_listings_group',
         'calculated_host_listings_count_entire_homes',
         'calculated_host_listings_count_private_rooms',
         'calculated_host_listings_count_shared_rooms',
