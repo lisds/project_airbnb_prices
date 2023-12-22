@@ -12,13 +12,10 @@ jupyter:
     name: python3
 ---
 
-# Air BNB Price Project
+## Page 2 Price Analysis
 
 
 ## Introduction
-
-
-Lorem Ipsum  ahoaihsdoihasoisha
 
 ```{python}
 import numpy as np
@@ -31,28 +28,25 @@ from projtools import data_tools as dt
 from projtools import plotting_tools as pt
 ```
 
-## Prices
-
 ```{python}
-from IPython.display import display, HTML
-display(HTML("<style>.jp-OutputArea-output {display:flex}</style>"))
 data = dt.data_setup()
 property_data = dt.group_data(data,'property')
 property_data.head()
 ```
-# More Bedrooms - Higher Price?
-According to [this 2023 article](https://www.rubyhome.com/blog/airbnb-stats/#airnb-hosts), there is a pretty stark correlation between how many bedrooms are listed in an airbnb and a higher price. Yet they combine every listing with 4 and more bedrooms into one - is there something else afoot?
+## More Bedrooms - Higher Price?
+**Statement :** According to {cite}`Tony Mariotti`, there is a strong positive correlation between bedrooms on airbnb and price. However they combine all bedrooms above 4.
+**Question :** Does the correlation carry past 4 bedrooms?
 
 
 ```{python}
+#Method
 mean_price_per_bedroom = property_data.groupby(['bedrooms'])[['price_per_night_£']].mean()
-mean_price_per_bedroom
-```
 
-Let's plot this out so we can see better:
-
-```{python}
+#Graph
 mean_price_per_bedroom.plot()
+
+#Result
+print(mean_price_per_bedroom)
 ```
 
 (insert analysis of graph above and of next steps (seeing sample size of each grouping) below)
