@@ -225,5 +225,3 @@ def Add_long_term_rental(data):
                                'review_scores_value', 'reviews_per_month', 'number_of_review_imgs', 'first_review', 'last_review']]
 
     return data
-
-complete
