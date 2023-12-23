@@ -19,7 +19,7 @@ from scipy.spatial import distance
 
 data = data_tools.data_setup()
 
-def prediction_func(var1, var2, var3, varZ, ID_Z):
+def prediction_func_diff(var1, var2, var3, varZ, ID_Z):
     def un_standardise(standardised_value, original_mean, original_std):
         return (standardised_value * original_std) + original_mean
     numerical_data = data_tools.group_data(data,'numerical')
@@ -52,3 +52,55 @@ def prediction_func(var1, var2, var3, varZ, ID_Z):
     
     
     # return()
+
+def prediction_func_prediction(var1, var2, var3, varZ, ID_Z):
+    def un_standardise(standardised_value, original_mean, original_std):
+        return (standardised_value * original_std) + original_mean
+    numerical_data = data_tools.group_data(data,'numerical')
+    relevant = numerical_data[[var1, var2, var3, varZ]].dropna()
+    standardised_relevant_data = (relevant - relevant.mean()) / relevant.std()
+    variable_df = standardised_relevant_data
+    row_Z = variable_df.loc[ID_Z, [var1, var2, var3]]
+    variable_df.drop(ID_Z)
+    def calculate_similarity(row):
+        return distance.euclidean(row[[var1, var2, var3]], row_Z)
+    distances = variable_df.head(1000).apply(calculate_similarity, axis=1)
+    closest = list(distances.sort_values(ascending=True).head().index)
+    standard_prediction = variable_df.loc[closest, varZ].mean()
+    standard_actual = variable_df.loc[ID_Z, varZ]
+    prediction = un_standardise(standard_prediction, relevant[varZ].mean(), relevant[varZ].std())
+    actual = un_standardise(standard_actual, relevant[varZ].mean(), relevant[varZ].std())
+    prediction_text = "Prediction for {} {}".format(ID_Z, varZ)
+    actual_text = "Actual {} for {}".format(varZ, ID_Z)
+    print(prediction_text, round(prediction,2))
+    print(actual_text, round(actual,2))
+    standardised_Z_difference = standard_actual - standard_prediction   
+    Z_difference = actual - prediction
+    #print("Error", round(Z_difference,2))
+    
+def prediction_func_location(var1, var2, var3, varZ, ID_Z, location):
+    def un_standardise(standardised_value, original_mean, original_std):
+        return (standardised_value * original_std) + original_mean
+    location_specific = data[data['neighbourhood_location'] == location]
+    location_numerical = data_tools.group_data(location_specific,'numerical')
+    relevant = location_numerical[[var1, var2, var3, varZ]].dropna()
+    standardised_relevant_data = (relevant - relevant.mean()) / relevant.std()
+    variable_df = standardised_relevant_data
+    row_Z = variable_df.loc[ID_Z, [var1, var2, var3]]
+    variable_df.drop(ID_Z)
+    def calculate_similarity(row):
+        return distance.euclidean(row[[var1, var2, var3]], row_Z)
+    distances = variable_df.head(1000).apply(calculate_similarity, axis=1)
+    closest = list(distances.sort_values(ascending=True).head().index)
+    standard_prediction = variable_df.loc[closest, varZ].mean()
+    standard_actual = variable_df.loc[ID_Z, varZ]
+    prediction = un_standardise(standard_prediction, relevant[varZ].mean(), relevant[varZ].std())
+    actual = un_standardise(standard_actual, relevant[varZ].mean(), relevant[varZ].std())
+    prediction_text = "Prediction for {} {}".format(ID_Z, varZ)
+    actual_text = "Actual for {} {}".format(varZ, ID_Z)
+    print(prediction_text, round(prediction,2))
+    print(actual_text, round(actual,2))
+    standardised_Z_difference = standard_actual - standard_prediction   
+    Z_difference = actual - prediction
+    print("Error", round(Z_difference,2))
+    
