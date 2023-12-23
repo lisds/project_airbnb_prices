@@ -4,7 +4,7 @@
 format: jb-book
 root: bookpages/intro.Rmd
 chapters:
-- file: bookpages/(Page 1) Data Exploration
-- file: bookpages/(Page 2) Price Analysis
-- file: bookpages/(Page 3) Prediction model
-- file: bookpages/(Page 4) Conclusions
+- file: bookpages/(Page 1) Data Exploration.Rmd
+- file: bookpages/(Page 2) Price Analysis.Rmd
+- file: bookpages/(Page 3) Prediction Model.Rmd
+- file: bookpages/(Page 4) Conclusions.Rmd

@@ -26,7 +26,7 @@ check_data.py
 
 
 STEP 3
-To build the book, run:
+To build the book, run in the root directory:
 
 ```
 jupyter-book build .

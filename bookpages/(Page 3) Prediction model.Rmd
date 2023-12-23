@@ -12,8 +12,7 @@ jupyter:
     name: python3
 ---
 
-# Airbnb Datascience Project
-## Page 1 Data exploration
+# Page 3 Data exploration
 ### Introduction
 
 <!-- #region -->
