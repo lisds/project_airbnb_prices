@@ -307,20 +307,20 @@ By mean average, it does seem to be more expensive to rent on Airbnb than it is 
 Interestingly it also appears that the largest spread of prices is at the 1 year and 3 year mark.
 
 
-### Invetigation of the 1 year and 3 year let duration
+### Invetigation of the 1 year (365days) and 3 year 1 month (1125 day) let duration
+**Statement** The graph shows higher prices are charged at 365 and 1125 days 
 
-```{python}
+**Question** Is this actually the case or is this misrepresentation and why might prices be higher if they are?
 
-```
 
-Not only does the graph above clearly highlight the improper use of the platform to offer long term rentals rather than short term holiday lets but it also suggests that hosts listing for durations of 1 year and 3 years, were charging significantly more than those at any other duration. 
+Not only does the graph above clearly highlight the improper use of the platform to offer long term rentals rather than short term holiday lets but it also suggests that hosts listing for durations of 1 year and 3 years and 1 month, were charging significantly more than those at any other duration. 
 
 Hovewever the graph deosnt appear to suggest that all the listings that have longer durations charge more. It only appears that it is exactly 365 and 1125 were this phenomena occurs. 
 
 Thus, we did some prelimenary analysis and ivestigation to see if this really is the case. 
 
 ```{python}
-# to begin we filtered the data to get the price data for 1 year and 3 years
+# to begin we filtered the data to get the price data for 1 year and 3 years 1 month
 
 long_term_listings = data[(data['maximum_nights_avg_bookings'] > 90) & (data['maximum_nights_avg_bookings'] < 1500)]
 
@@ -338,15 +338,15 @@ listings_around_three_year = long_term_listings[(long_term_listings['maximum_nig
 # to see if there was a difference or in the data on average we found the means of 1, 3 and around each of these years
 
 one_year_mean = one_yr_price_nights['price_per_night_£'].mean() 
-three_yr_mean = three_yr_price_nights['price_per_night_£'].mean() 
+three_yr_one_month_mean = three_yr_price_nights['price_per_night_£'].mean() 
 around_one_mean = listings_around_one_year['price_per_night_£'].mean()
-around_three_mean = listings_around_three_year['price_per_night_£'].mean()
+around_three_year_one_month_mean = listings_around_three_year['price_per_night_£'].mean()
 print("One year mean", one_year_mean)
-print("Three year mean", three_yr_mean)
+print("Three year one month mean", three_yr_one_month_mean)
 print("Around one year mean", around_one_mean)
-print("Around three year mean", around_three_mean)
+print("Around three year one month mean", around_three_year_one_month_mean)
 print("One year diff.", one_year_mean - around_one_mean)
-print("Three year diff.", three_yr_mean - around_three_mean)
+print("Three year diff.", three_yr_one_month_mean - around_three_year_one_month_mean)
 ```
 
 This brief analysis brigns an interesting condradiction and also suprising result
@@ -360,36 +360,63 @@ To do this we employed the use of quatiles to represent how the data is spread w
 ```{python}
 # for clarification of the working within this funciton that provide the graph below look at the quartile_prices.py file in projtools
 
-qp.plot_scatter_quartiles_multiple_dfs([one_yr, three_yr, listings_around_one_year, listings_around_three_year], 'price_per_night_£', ['one year', 'around one year', 'three year', 'listing around three year'])
-qp.plot_scatter_quartiles_multiple_dfs_whole([one_yr, three_yr, listings_around_one_year, listings_around_three_year], 'price_per_night_£', ['one year', 'around one year', 'three year', 'listing around three year'])
+qp.plot_scatter_quartiles_multiple_dfs([one_yr, three_yr, listings_around_one_year, listings_around_three_year], 'price_per_night_£', ['365 Days', 'Around 365', '1125 Days', 'Around 1125'])
+qp.plot_scatter_quartiles_multiple_dfs_whole([one_yr, three_yr, listings_around_one_year, listings_around_three_year], 'price_per_night_£', ['365 Days', 'Around 365', '1125 Days', 'Around 1125'])
+qp.plot_scatter_quartiles_multiple_dfs_zoomed([one_yr, three_yr, listings_around_one_year, listings_around_three_year], 'price_per_night_£', ['365 Days', 'Around 365', '1125 Days', 'Around 1125'])
 ```
 
-<!-- #region -->
-The two representations above are useful because they show how the data is spread within eaach group - year one, around year one etc.. Therefore we are able to get a better understanding of why we are getting condradicting results and large differences in the mean for year one and year 3. 
+## General observations:
 
-First, lets consider the supper quartile. It appears that three quarters of all results in each group are within a small price range howver the upper quartile reveals a much larger spread of data. The larger values in this quartile appear siginificantly greater than the results in the other quartiles and therefore may have the ability to influence the mean. However, this is not true for all of the data. You would expect the listign groups with a greater numeber of results aka. 1 year and 3 years to have a higher number of these large results by chance. This is not the case and although 3 years contains the most values it has much similar values than one year or even around one year.  
+### Data Spread
+- There is an increasing spread of data as you move from the first quartile (Q1) to the fourth quartile (Q4). This suggests that the variability in price per night is greater at higher price levels.
+
+### Price Range
+- In Q1, the prices are tightly grouped and lower, indicating that a significant number of listings are available at lower prices.
+- In Q2 and Q3, the prices are more spread out, showing a greater variation in pricing.
+- In Q4, the prices are very spread out, with some listings being priced significantly higher than others. This is where the luxury or high-end listings are likely to be.
+
+## Comparison between the data groups:
+
+### One Year Listings
+- This group seems to have a higher concentration of points across all quartiles, suggesting a wide range of prices for one-year listings.
+- The mean price being the highest in this group indicates that, on average, listings for exactly one year are more expensive than listings for durations that are around one year or three years one month.
+
+### Around One Year Listings
+- The distribution of prices for listings around one year appears slightly lower than exactly one year, aligning with your analysis that the mean price for this group is lower than the one-year listings.
+- This group also has a wide spread in Q4, but not as many high-priced outliers as the one-year listings, suggesting that while there are premium options, they are not as extreme in price.
+
+### Three Years One Month Listings
+- The three year one month listings appear to have a more concentrated distribution in the lower quartiles (Q1 and Q2) and fewer points in the higher quartiles (Q3 and Q4). This indicates that  the 1125 day listings are generally cheaper than one-year listings.
+- The lower mean price suggests that longer-term listings are priced more competitively, potentially to attract tenants willing to commit to a longer stay.
+
+### Around Three Year One Month Listings
+- The distribution of prices for listings around 1125 seems to be slightly higher than exactly three years, which may indicate a little more variability in the prices for listings that don't commit to an exact 1125 day let.
+- There's also a presence in the higher quartiles, but not as pronounced as the one-year listings. These lisitngs woudl also include the 3 year term which could attract higher prices due to its more circular nature. 
+
+## What does this all suggest
+
+From these observations, it seems there is a trend where the exact one-year term listings are priced higher on average, which could be due to a variety of factors such as higher demand for one-year leases or perceived convenience. In contrast, the longer-term 1125 day listings are generally less expensive, which could be an incentive to attract longer-term tenants, offering a discount for the commitment to a longer stay. 
+
+The data suggests that there is a premium associated with the percieved wholeness and convenience of exact one year terms, while longer or less exact terms seem to offer more competitive pricing. This could reflect a range of different strategies by landlords or property managers letting for different durations of time.
+
+## Refletction on intial hypotheses
+
+Our intial refelection on the data provided on the graph was that the prices of the listings for 365 day and 1125 day lets where significantly higher than all of the other listings. However, our analysis proved this to be wrong and it was in fact the case that although on the 1-year litings where slighlty higher than around 1-year listings this was not the case for the 1125 day let. The 1125 day let seemed to have more variation in the values which is too be expected as it has the larger number of listings in this group, however they were most concentrated to the lower end and therfore were on averge more competitively priced. We also came to the conclusion that landlords were able to charge higher higher prices for the 365 day term because of the percieved wholeness of the value and convenience of the exact one year term.
+
+ 
 
 
-high results are not evenly disrubuted
-find out what proportion of the results give the highest x values 
-<!-- #endregion -->
+# Summary
 
-### Summary
+```{python}
 
+```
 
 Airbnb is being used in london predominantly for long term rentals and it is using up a significant portion of the housing stock to do this. There are a variety of different actors on the platform with the majority being individuals who only have 1 property, however there are individuals/groups who use the platform as a large scale property business. 
 
 Further avenues to explore will involve  
 -Predicting which properties are likely to be used for long term and short term rentals   
 -Predicting the price of a Listing
-
-```{python}
-
-```
-
-```{python}
-
-```
 
 ```{python}
 
