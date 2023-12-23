@@ -38,15 +38,15 @@ def overprice_function(var1, var2, var3, ID_Z, num_rows, significance):
 
 
 
-def ttest_function(var1, var2, var3, varZ, ID_Z, rows):
+def ttest_function(var1, var2, var3, ID_Z, rows):
     numerical_data = data_tools.group_data(data,'numerical')
-    relevant = numerical_data[[var1, var2, var3, varZ]].dropna()
+    relevant = numerical_data[[var1, var2, var3, 'price_per_night_£']].dropna()
     for index, row in relevant.head(rows).iterrows():
         error = k_best_neighbours_prediction.prediction_func_location('accommodates', 'number_of_reviews', 'host_listings_count', 'price_per_night_£', index)
         relevant.at[index, 'errors'] = error
     ID_Z_error = relevant.at[ID_Z, 'errors']
     likelihood = np.count_nonzero(relevant['errors'] > ID_Z_error) / rows
-    if likelihood < 0.05:
+    if likelihood < 0.10:
         print('This listing is overpriced for its characteristics and location')
     else:
         print('This listing is not overpriced for its characteristics and location')
