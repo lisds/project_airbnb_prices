@@ -1,0 +1,6 @@
+# Airbnb Data Analysis Project
+
+This project aims to explore the short term rental market in London, specifically Airbnb. 
+In our analysis, we used a dataset from Kaggle, consisting of around 70,000 Airbnb listings in London. The dataset is a precleaned dataset that was originally sourced from http://insideairbnb.com. 
+This dataset has a detailed view of each listing, including but not limited to host details, amenities, booking information, and the duration of stay.
+We use journalistic articles and statistics, for the basis of Airbnb usage and pricing in London.

@@ -2,8 +2,9 @@
 # Learn more at https://jupyterbook.org/customize/toc.html
 
 format: jb-book
-root: intro
+root: bookpages/intro.Rmd
 chapters:
-- file: bookpages/(Page 1) Data Exploration
-- file: bookpages/(Page 2) Further Exploration Prices
-- file: 
+- file: bookpages/(Page 1) Data Exploration.Rmd
+- file: bookpages/(Page 2) Price Analysis.Rmd
+- file: bookpages/(Page 3) Prediction Model.Rmd
+- file: bookpages/(Page 4) Conclusions.Rmd

@@ -19,7 +19,7 @@ from scipy.spatial import distance
 
 data = data_tools.data_setup()
 
-def prediction_func_diff(var1, var2, var3, varZ, ID_Z):
+def prediction_func(var1, var2, var3, varZ, ID_Z):
     def un_standardise(standardised_value, original_mean, original_std):
         return (standardised_value * original_std) + original_mean
     numerical_data = data_tools.group_data(data,'numerical')

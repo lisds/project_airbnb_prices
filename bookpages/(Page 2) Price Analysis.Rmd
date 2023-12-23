@@ -1,0 +1,186 @@
+---
+jupyter:
+  jupytext:
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.15.2
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+---
+
+# Page 2 Price Analysis
+
+
+## Introduction
+
+This page will look to analyse trends in the pricing of airbnb data. This will focus on the listings that have an average maximum booking of over 90 days so as to be able to to analyse listings that are used on Airbnb as longterm rental.
+
+```{python}
+import numpy as np
+import pandas as pd
+import scipy.stats as sps
+import matplotlib.pyplot as plt
+from projtools import data_tools as dt
+```
+
+```{python}
+data = dt.data_setup()
+property_data = dt.group_data(data,'property')
+property_data_over_90 = property_data[(property_data.maximum_nights_avg_bookings>90) & (property_data.maximum_nights_avg_bookings<1500)].copy()
+property_data_over_90
+```
+## More Bedrooms - Higher Price?
+**Statement :** According to {cite}`mariotti_2023`, there is a strong positive correlation between bedrooms on Airbnb and price.    
+**Question :** Can we replicate this finding?
+
+
+```{python}
+#Method
+mean_price_per_bedroom = property_data_over_90.groupby(['bedrooms'])[['price_per_night_£']].mean()
+#Graph
+mean_price_per_bedroom.plot()
+#Result
+print(mean_price_per_bedroom)
+```
+
+From 0 to 1 bedrooms there is a small dip, going from studios to 1 bedroom apartments. This could indicate that studios are more desirable than 1 beds or it could indicate that they are more upmarket. 
+
+There is then a sharp increase up from 1 bedroom to 8 from £125 up to £2772. There is then a sharp decrease back down to around £600 for 9/10. This decrease continues to 12 at which point it increase to 22 and then decreases down to 50.
+
+The peculiar shape of the graph can be explained by the number of values for each as there may not be an appropriate sample size for listings past a certain number.
+
+
+**Statement:** There may not be an equal distribution of values for property sizes by bedroom.  
+**Question:** How many values are there?
+
+```{python}
+#Method
+bedroom_counts = property_data_over_90['bedrooms'].value_counts()
+#Result
+bedroom_counts
+```
+
+There is a wide distribution of values for each.
+Common statistical guidelines {cite}`bullen_2013` , state a good sample size is often around 10% of the total population, as long as the sample does not exceeed 1000. 10% of our sample exceeds 1,000, thus our threshold is 1000. This allows us to include 4 beds in our analysis. 
+
+Further caculation reflects this, focusing specifically on properties with only up to 4 bedrooms, aligning with {cite}`mariotti_2023`.
+
+```{python}
+#Graph
+mean_price_per_bedroom[:4].plot()
+```
+
+This produces the same result as {cite}`mariotti_2023`. We can now perform a linear regression on this.
+
+```{python}
+x = np.array([0, 1, 2, 3, 4])
+y = np.array(mean_price_per_bedroom['price_per_night_£'][:4])
+res = sps.linregress(x, y)
+res
+```
+
+```{python}
+plt.scatter(x, y)
+plt.plot(x, res.intercept + res.slope*x, 'r', label='fitted line')
+plt.show
+```
+
+As is expected the rvalue is high at 0.93. Which shows that there is a strong positive correlation from 1-4 bedrooms between price and bedrooms. 
+
+The slope = 81, with this in a future analysis we could do a comparison with housing market data to determine if it increases at the same rate on Airbnb as it does on the wider housing market.
+
+
+# Price and Room Type
+**Statement:** Some of those one-bedrooms above are because the guest/tenant only has access to one room rather than the whole apartment.  
+**Question:** Could this be part of the reason why one-bedroom appartments have the lowest price on average, as people feel uncomfortable living with strangers?
+
+```{python}
+#Method
+mean_price_per_room_type = property_data_over_90.groupby(['room_type'])[['price_per_night_£']].mean()
+#Result
+mean_price_per_room_type
+```
+
+**Result:**
+There is a wide spread of results between Room type. However we need to ensure that we are not dealing with a wide spread of sample sizes again.
+
+
+Neither Shared or Hotel rooms meet our standard for a minimum of 1000 values. So we will focus on Entire home/Apartments and Private rooms. This would make sense, having a shared room or a hotel room as a Long term rental would be unusual.
+
+We can now check to see whether there is a higher amount of 1 bedroom airbnbs in the latter, that could be influencing our above findings.
+
+```{python}
+#Method
+bedrooms_per_room_type = property_data_over_90[property_data_over_90.room_type.isin(['Entire home/apt', 'Private room'])].groupby \
+                    (['room_type'])[['bedrooms']]
+#Graph
+bedrooms_per_room_type.value_counts()
+#Result
+print(bedrooms_per_room_type.value_counts())
+
+room_type_counts = property_data_over_90['room_type'].value_counts()
+print(room_type_counts)
+```
+
+**Result**
+
+"Private rooms" overwhelmingly have 1 bedroom, the "Entire home/apt" category also has 1 bedroom, but we can see it has a more evenly distributed spread. However we can see there are 27479 Private rooms listed compared to 41217 Entire home/apt, so it could still have an influence on the price.
+
+The question is, are 1 bedroom listing prices lower because a significant amount are Private rooms, or do Private rooms have a lower mean price because they usually 1 bedroom? Future studies could utilise qualitative methods such as surveys or focus groups to investigate this, asking both guests and hosts why they price certain room and bedroom amounts in certain ways.
+
+
+# Comparison with Private Rentals
+
+
+**Statement:** According to {cite}`ons_2023` Market in London: April 2022 to March 2023 - Office for National Statistics, based on the Valuation Office Agency's data, in March 2023 the prices for number of bedrooms looked like this: (the 'Room' and 'One Bedroom' types have been combined, just as the 'Private room' and 'Entire home/apt' in the Airbnb data).  
+**Question:** How similar is the data from Private Rentals to that of long term Airbnbs?
+
+```{python}
+private_rentals = pd.DataFrame({'bedrooms': ['0', '1', '2', '3', '4+'],
+                    'mean_price_per_month': [1126, 1052, 1727, 2122, 3068]})
+private_rentals['mean_price_per_night'] = private_rentals['mean_price_per_month']/30
+print(private_rentals)
+plt.plot(private_rentals['bedrooms'], private_rentals['mean_price_per_night'])
+```
+
+```{python}
+x_private = np.array([0, 1, 2, 3, 4])
+y_private = np.array(private_rentals['mean_price_per_night'][:5])
+res_private = sps.linregress(x_private, y_private)
+res_private
+```
+
+```{python}
+plt.scatter(x_private, y_private)
+plt.plot(x_private, res_private.intercept + res_private.slope*x_private, 'r', label='fitted line')
+plt.show
+```
+
+The shape is almost identical to our findings, with an r value of 0.95 (2dp) the Airbnb long term listings r value was 0.93. Therefore we can conclude that Airbnb increases at marginally lower rate in prices per bedroom than the housing market.
+
+
+# The Must Haves
+
+According to Airbnb themselves {cite}`airbnb_2020` The amenities guests want – Resource Centre there are certain amenities that people really want to have in their airbnb. But does the price reflect that? Note that we will need to .dropna here for the .str.contains method to work, which may influence the end result.
+
+The first most wanted amenity is a pool. This may be a stretch in London, so we'll combine that with number 5 on the list, a hot tub:
+
+```{python}
+property_data_dropna = property_data_over_90.dropna()
+pool_tub_properties = property_data_dropna[property_data_dropna['amenities'].str.contains('hot tub|Hot tub|pool|Pool')]
+len(pool_tub_properties)
+```
+
+This is well over our chosen minimum sample size. Let's look at the price per night for those that have and don't have a pool, while also controlling for bedrooms:
+
+```{python}
+property_data_dropna['Has Pool'] = property_data_dropna['amenities'].str.contains('hot tub|Hot tub|pool|Pool')
+has_pool_grouped = property_data_dropna[property_data_dropna.bedrooms<5].groupby(['Has Pool', 'bedrooms'])[['price_per_night_£']].mean()
+has_pool_grouped
+```
+
+Simply looking at the data we can see that there isn't much of a difference in price, and in fact, Airbnbs without a pool or a hot tub have a slightly higher average price per night than ones that do.
