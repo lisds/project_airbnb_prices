@@ -12,4 +12,8 @@ jupyter:
     name: python3
 ---
 
-# Conclusions
+# Conclusion
+
+We have explored the short-term rental market in London using Airbnb data. In the process, we have managed to replicate several statistics, finding correlations between the housing market and listings on Airbnb that are used for long-term rent. The platform has a range of hosts, with the majority having a single property, but hosts are using Airbnb as a property business with large quantities of listings. This combined with the high percentage of properties in breach of the 90-day limit means that Airbnb is being used as a viable alternative to the housing market in many ways. While you would expect, and our data shows that Airbnb is more expensive than the traditional housing market it is worth noting that it provides a different experience, as all the bills are included. Notably, our data indicates that premium amenities such as pools or hot tubs do not necessarily translate into significantly higher prices as would be expected.
+
+We attempted to develop prediction models to deal with 3 problems. We were able to predict pricing but we were less able to predict whether a listing was being used as a short-term or long-term rental due to outliers throwing the model off. Moving forward we would aim to look into specific areas in London to see whether we could find a correlation between pricing and whether it was being used as a short-term or long-term rental. We would also look to compare this dataset against the housing market to determine what the impact of Airbnb is on the housing market in London. 
