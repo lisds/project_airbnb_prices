@@ -37,8 +37,8 @@ property_data_over_90 = property_data[(property_data.maximum_nights_avg_bookings
 property_data_over_90
 ```
 ## More Bedrooms - Higher Price?
-**Statement :** According to {cite}`Tony Mariotti`, there is a strong positive correlation between bedrooms on airbnb and price. However they combine all bedrooms above 4.
-**Question :** Does the correlation carry past 4 bedrooms?
+**Statement :** According to {cite}`Tony Mariotti`, there is a strong positive correlation between bedrooms on airbnb and price.
+**Question :** Can we replicate this finding?
 
 
 ```{python}
@@ -110,6 +110,36 @@ bedrooms_per_room_type.value_counts()
 While Private rooms overwhelmingly have only one bedroom, the Entire home/apt category also has that as its highest category. However we know from the value_counts above that there are 27479 Private rooms listed compared to 41217 Entire home/apt, so it could still have an influence on the price.
 
 This is however where it gets tricky. 1 bedroom airbnbs prices lower because a sizeable chunk of them are Private rooms, or are Private rooms have a lower mean price because they mostly have 1 bedroom? This is where future studies utilising more qualitative methods such as surveys or focus groups may come in useful, asking both bookers and hosts why they price certain room and bedroom amounts in certain ways.
+
+
+# Comparison with Private Rentals
+
+
+**Statement**: According to [The Office for National Statistics](https://www.ons.gov.uk/economy/inflationandpriceindices/adhocs/1261privaterentalmarketinlondonapril2022tomarch2023), based on the Valuation Office Agency's data, in March 2023 the prices for number of bedrooms looked like this: (the 'Room' and 'One Bedroom' types have been combined, just as the 'Private room' and 'Entire home/apt' in the Airbnb data).
+**Question**: How similar is the data from Private Rentals to that of long term Airbnbs?
+
+```{python}
+private_rentals = pd.DataFrame({'bedrooms': ['0', '1', '2', '3', '4+'],
+                    'mean_price_per_month': [1126, 1052, 1727, 2122, 3068]})
+private_rentals['mean_price_per_night'] = private_rentals['mean_price_per_month']/30
+print(private_rentals)
+plt.plot(private_rentals['bedrooms'], private_rentals['mean_price_per_night'])
+```
+
+```{python}
+x_private = np.array([0, 1, 2, 3, 4])
+y_private = np.array(private_rentals['mean_price_per_night'][:5])
+res_private = sps.linregress(x_private, y_private)
+res_private
+```
+
+```{python}
+plt.scatter(x_private, y_private)
+plt.plot(x_private, res_private.intercept + res_private.slope*x_private, 'r', label='fitted line')
+plt.show
+```
+
+This is very similar to our findings (include stuff about private room vs whole apartment split, and how combining that data might have influenced the results)
 
 
 # The Must Haves
