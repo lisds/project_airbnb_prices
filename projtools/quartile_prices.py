@@ -45,7 +45,7 @@ def plot_scatter_quartiles_multiple_dfs(dataframes, column_name, df_names):
     plt.show()
 
 
-def plot_scatter_quartiles_multiple_dfs(dataframes, column_name, df_names):
+def plot_scatter_quartiles_multiple_dfs_whole(dataframes, column_name, df_names):
     plt.figure(figsize=(10, 6))
 
     # different colours for each dataframe scatter 
