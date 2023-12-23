@@ -17,12 +17,12 @@ jupyter:
 ### Introduction
 
 
-In the previous exploration of the AirBnb data two several issues where raised. The following notebook will look to provide a solution for a problem faced but each key stakeholder in the data - Airbnb, Hosts and Guests.
+In the previous exploration of the AirBnb data two several issues were raised. The following notebook will look to provide a solution for a problem faced but each key stakeholder in the data - Airbnb, Hosts, and Guests.
 
 The problems are: 
- - A large number of hosts are violating the 90 night letting limit. Airbnb only have the avergae numebr of nights a room is booked for to go on to knwo if they are violating this or not, it can subsequently take a long time to establish whether these individuals are repeatadly going to violate the term or if they are likley to at any point.
+ - A large number of hosts are violating the 90-night letting limit. Airbnb only has the average number of nights a room is booked for to go on to know if they are violating this or not, it can subsequently take a long time to establish whether these individuals are repeatedly going to violate the term or if they are likely to at any point.
 
- - Many hosts may have difficulty seetting an accurate price for there listing as it is nearly impossible to have complete market knowledge of the other similar properties.
+ - Many hosts may have difficulty setting an accurate price for their listing as it is nearly impossible to have complete market knowledge of other similar properties.
 
  - As can be inferred from the previous pages some hosts ask for a lot higher pricing than other similar properties. Therefore, guests may find it difficult to identify whether they are being ripped off or not.
 
@@ -38,60 +38,60 @@ data = dt.data_setup()
 
 ## Problem 1
 
-A large number of hosts are violating the 90 night letting limit. Airbnb only have the avergae numebr of nights a room is booked for to go on to knwo if they are violating this or not, it can subsequently take a long time to establish whether these individuals are repeatadly going to violate the term or if they are likley to at any point.
+A large number of hosts are violating the 90-night letting limit. Airbnb only has the average number of nights a room is booked for to go on to know if they are violating this or not, it can subsequently take a long time to establish whether these individuals are repeatedly going to violate the term or if they are likely to at any point.
 
 
-In order to combat this issue we have created a model for use by Airbnb in order to identify those listing that have a high chance of beign let for over the 90 day limit.
+In order to combat this issue we have created a model for use by Airbnb in order to identify those listings that have a high chance of being let for over the 90-day limit.
 
 
 The function does the following:
 
 - Takes the ID of the new listing by a host
-- It then standardises the results for the number of beedrooms, price of the property and the number of listings that the host has
+- It then standardises the results for the number of bedrooms, price of the property, and the number of listings that the host has
 - These values are then compared to the corresponding standardised values for a random sample of 1000 listings in the dataframe 
-- The number of maximum avergae nights booked is then recorder for the the 2 most closely realated listings
+- The number of maximum average nights booked is then recorded for the the 2 most closely related listings
 - The mean average of these results is then taken to provide a prediction for the maximum average nights booked
-- If the prediction is over the 90 day limit by at least 10 days (acting as an error buffer) then the fucntion will print "investigation needed" if not it will print "complies" to suggest that the host is not likely to let the property for over 90 days.
+- If the prediction is over the 90-day limit by at least 10 days (acting as an error buffer) then the function will print "investigation needed" if not it will print "complies" to suggest that the host is not likely to let the property for over 90 days.
 
 ```{python}
-# here is an example of the function in use
-# The example ID 49698549 is a test for used to illusrate what the function would suggest.
-# We know that the property in question does exceed the 90 day limit with a maximum nights average booking of 1125
+# Here is an example of the function in use
+# The example ID 49698549 is a test used to illustrate what the function would suggest.
+# We know that the property in question does exceed the 90-day limit with a maximum nights average booking of 1125
 k.ninety_day_test(49698549)
 ```
 
 ```{python}
-# here is another example but for a property we know doesnt violate the 90 day limit with a maximum nights average booking of 10
+# Here is another example but for a property we know doesn't violate the 90-day limit with a maximum nights average booking of 10
 k.ninety_day_test(39387)
 ```
 
 ```{python}
-#  to see the code that maked up the function go to k_best_neighbours_prediction.py in projtools and look at the ninety_day_test_function
+#  To see the code that made up the function go to k_best_neighbours_prediction.py in projtools and look at the ninety_day_test_function
 ```
 
 ## Problem 2
 
-Many hosts may have difficulty seetting an accurate price for there listing as it is nearly impossible to have complete market knowledge of the other similar properties.
+Many hosts may have difficulty setting an accurate price for their listing as it is nearly impossible to have complete market knowledge of other similar properties.
 
 
-In order to tackle this problem we created a function for use by hosts that provides a suggested price for their listing and then suggests whether they should increase or decrease their price based on other properties with certain similar characteristics chosen by the host.
+To tackle this problem we created a function for use by hosts that provides a suggested price for their listing and then suggests whether they should increase or decrease their price based on other properties with certain similar characteristics chosen by the host.
 
 
 The function does the following:
 
 - Refines the data to the listings that are based in the same borough as the hosts listing
-- Further refines the data to focus on the charactericts the host has chosen for price comparison dropping the listings that contain a NaN value 
-- It then standardises the results for the three choosen variables
+- Further refines the data to focus on the characteristics the host has chosen for price comparison dropping the listings that contain a NaN value 
+- It then standardises the results for the three chosen variables
 - 
-These values are then compared to the corresponding standardised values for a random sample of 1000 listings in the datafra
+These values are then compared to the corresponding standardised values for a random sample of 1000 listings in the dataframe
 - The prices of the five most similar listings are then averaged to provide a suggested price
-- The difference is then calculated and depending on whether the suggested price is higher or lower than the price they currently have it it will suggest that they either decrease or increase the price of the listing
+- The difference is then calculated and depending on whether the suggested price is higher or lower than the price they currently have it will suggest that they either decrease or increase the price of the listing
 - The output will be this suggestion the suggested price and the current price of their listing
 
 The inputs that the host needs to provide are:
 
-- The three characteristics e.g number of beds, accomodates, review scores rating
-- The ID of the listingme
+- The three characteristics e.g number of beds, accommodates, review scores rating
+- The ID of the listing
 
 ```{python}
 # The below shows what variables and example of what characteristics the host would choose and how they would assign them
@@ -104,14 +104,14 @@ var3 = 'review_scores_rating'
 ```
 
 ```{python}
-# here is an example of the function using the above characteristics that shows a property that is (slightly) overpriced comparatively
+# Here is an example of the function using the above characteristics that shows a property that is (slightly) overpriced comparatively
 
 k.prediction_func_Hosts(var1, var2, var3, ID_Z)
 ```
 
 ```{python}
 # Here is an example of the function using the above characteristics that shows a property that is (slightly) underpriced comparatively
-# It uses different characteristics to show the flexibilty of the model 
+# It uses different characteristics to show the flexibility of the model 
 
 ID_Z = 13913
 
@@ -123,7 +123,7 @@ k.prediction_func_Hosts(var1, var2, var3, ID_Z)
 ```
 
 ```{python}
-# to see the code that maked up the function go to k_best_neighbours_prediction.py in projtools and look at the prediction_func_Hosts
+# To see the code that made up the function go to k_best_neighbours_prediction.py in projtools and look at the prediction_func_Hosts
 ```
 
 ## Problem 3
@@ -131,26 +131,26 @@ k.prediction_func_Hosts(var1, var2, var3, ID_Z)
 As can be inferred from the previous pages some hosts ask for a lot higher pricing than other similar properties. Therefore, guests may find it difficult to identify whether they are being ripped off or not.
 
 
-To overcome this issue we have created a function that will let the guest know whether the listing they are considering is significantly overpriced, reasonabel or underpriced based on the chosen characteristics it has and the sigificance level chosen.
+To overcome this issue we have created a function that will let the guest know whether the listing they are considering is significantly overpriced, reasonable, or underpriced based on the chosen characteristics it has and the significance level chosen.
 
 
 The function does the following:
 
-- Refines the data to the listings that are based in the same borough as the lsiitng in question
-- Further refines the data to focus on the charactericts the host has chosen for price comparison dropping the listings that contain a NaN value 
-- It then standardises the results for the three choosen variables
+- Refines the data to the listings that are based in the same borough as the listing in question
+- Further refines the data to focus on the characteristics the host has chosen for price comparison dropping the listings that contain a NaN value 
+- It then standardises the results for the three chosen variables
 - These values are then compared to the corresponding standardised values for a random sample of 1000 listings in the dataframe
-- The prices of the five most similar listings are then averaged to provide a predicted price for that property given its charcateristics
+- The prices of the five most similar listings are then averaged to provide a predicted price for that property given its characteristics
 - The difference is then calculated between the actual price and the predicted price
 - A simple ttest is then done using this result and the error scores for x number rows in the data to test the significance of the actual price and the predicted price
 - The significance level is set at 0.1 
-- If the difference between the predicted price and the actual price for the listing of interest is greater than 90% of x listings the fucntion will state "Overpriced"
+- If the difference between the predicted price and the actual price for the listing of interest is greater than 90% of x listings the function will state "Overpriced"
 
 The inputs that the guest needs to provide are:
 
 - The ID of the listing they want to investigate
-- The three characteristics e.g accomomodates, number of reviews, review scores rating
-- The number of rows for deviation comparison (the greater the number the more accurate but the function is)
+- The three characteristics e.g accommodates, number of reviews, review scores rating
+- The number of rows for deviation comparison (the greater the number the more accurate the function is)
 
 ```{python}
 # example of the function
@@ -166,6 +166,6 @@ ttest.ttest_function(var1, var2, var3, ID_Z, rows)
 ```
 
 ```{python}
-# to see the code that maked up the function go to k_best_neighbours_prediction.py in projtools and look at the prediction_func_location function
-# then go to ttest_for_errors.py in the same folder and look at overprice_function
+# To see the code that made up the function go to k_best_neighbours_prediction.py in projtools and look at the prediction_func_location function
+# Then go to ttest_for_errors.py in the same folder and look at overprice_function
 ```
