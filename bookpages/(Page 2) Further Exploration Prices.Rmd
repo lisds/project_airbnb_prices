@@ -26,12 +26,15 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 from projtools import data_tools as dt
 from projtools import plotting_tools as pt
+from IPython.display import display, HTML
+display(HTML("<style>.jp-OutputArea-output {display:flex}</style>"))
 ```
 
 ```{python}
 data = dt.data_setup()
 property_data = dt.group_data(data,'property')
-property_data.head()
+property_data_over_90 = property_data[(property_data.maximum_nights_avg_bookings>90) & (property_data.maximum_nights_avg_bookings<1500)].copy()
+property_data_over_90
 ```
 ## More Bedrooms - Higher Price?
 **Statement :** According to {cite}`Tony Mariotti`, there is a strong positive correlation between bedrooms on airbnb and price. However they combine all bedrooms above 4.
@@ -40,7 +43,7 @@ property_data.head()
 
 ```{python}
 #Method
-mean_price_per_bedroom = property_data.groupby(['bedrooms'])[['price_per_night_£']].mean()
+mean_price_per_bedroom = property_data_over_90.groupby(['bedrooms'])[['price_per_night_£']].mean()
 
 #Graph
 mean_price_per_bedroom.plot()
@@ -52,7 +55,7 @@ print(mean_price_per_bedroom)
 (insert analysis of graph above and of next steps (seeing sample size of each grouping) below)
 
 ```{python}
-bedroom_counts = property_data['bedrooms'].value_counts()
+bedroom_counts = property_data_over_90['bedrooms'].value_counts()
 bedroom_counts
 ```
 
@@ -71,7 +74,7 @@ res = sps.linregress(x, y)
 res
 ```
 
-The interesting number here `rvalue = 0.92` as that implies a very positive correlation ... (write more here)
+The interesting number here `rvalue = 0.93` as that implies a very positive correlation ... (write more here)
 
 ```{python}
 plt.scatter(x, y)
@@ -85,21 +88,21 @@ plt.show
 Some of those one-bedrooms above are because the booker only has access to one room rather than the whole apartment. Could this be part of the reason why one-bedroom appartments have the lowest price on average, as people feel uncomfortable living with strangers?
 
 ```{python}
-mean_price_per_room_type = property_data.groupby(['room_type'])[['price_per_night_£']].mean()
+mean_price_per_room_type = property_data_over_90.groupby(['room_type'])[['price_per_night_£']].mean()
 mean_price_per_room_type
 ```
 
 Seems like a pretty sharp difference between some categories! Let's make sure we're not dealing with small sample sizes again though:
 
 ```{python}
-room_type_counts = property_data['room_type'].value_counts()
+room_type_counts = property_data_over_90['room_type'].value_counts()
 room_type_counts
 ```
 
 Neither Shared or Hotel rooms meet our standard of minimum 1000 values for a good sample size. So we'll only focus on Entire home/apt and Private rooms, and see whether there is a higher amount of 1 bedroom airbnbs in the latter, that could be influencing our above findings.
 
 ```{python}
-bedrooms_per_room_type = property_data[property_data.room_type.isin(['Entire home/apt', 'Private room'])].groupby \
+bedrooms_per_room_type = property_data_over_90[property_data_over_90.room_type.isin(['Entire home/apt', 'Private room'])].groupby \
                     (['room_type'])[['bedrooms']]
 bedrooms_per_room_type.value_counts()
 ```
@@ -116,16 +119,16 @@ According to [Airbnb themselves](https://www.airbnb.com/resources/hosting-homes/
 The first most wanted amenity is a pool. This may be a stretch in London, so we'll combine that with number 5 on the list, a hot tub:
 
 ```{python}
-property_data_dropna = property_data.dropna()
+property_data_dropna = property_data_over_90.dropna()
 pool_tub_properties = property_data_dropna[property_data_dropna['amenities'].str.contains('hot tub|Hot tub|pool|Pool')]
 len(pool_tub_properties)
 ```
 
-This is well over our chosen minimum sample size. 
+This is well over our chosen minimum sample size. Let's look at the price per night for those that have and don't have a pool, while also controlling for bedrooms:
 
 ```{python}
 property_data_dropna['Has Pool'] = property_data_dropna['amenities'].str.contains('hot tub|Hot tub|pool|Pool')
-has_pool_grouped = property_data_dropna.groupby(['Has Pool'])[['price_per_night_£']].mean()
+has_pool_grouped = property_data_dropna[property_data_dropna.bedrooms<5].groupby(['Has Pool', 'bedrooms'])[['price_per_night_£']].mean()
 has_pool_grouped
 ```
 
