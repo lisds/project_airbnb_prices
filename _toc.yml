@@ -4,6 +4,6 @@
 format: jb-book
 root: intro
 chapters:
-- file: markdown
-- file: notebooks
-- file: markdown-notebooks
+- file: bookpages/(Page 1) Data Exploration
+- file: bookpages/(Page 2) Further Exploration Prices
+- file: 
