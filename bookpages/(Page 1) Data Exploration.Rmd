@@ -12,7 +12,7 @@ jupyter:
     name: python3
 ---
 
-# Page 1 Data_exploration
+# Page 1 Data exploration
 
 <!-- #region -->
 #### Data sourcing
@@ -131,8 +131,8 @@ data.describe()
    - According to City Hall, properties in London listed on the short-term rental market make an average of £109 per night. In contrast, if they were rented out to long-term tenants, they could yield an average of £58 per night {cite}`temperton_2020`.
 
 
-### Further things to explore from "Airbnb has devoured London – and here’s the data that proves it" Temperton 2020
-
+**Further things to explore from "Airbnb has devoured London – and here’s the data that proves it" Temperton 2020**
+        
 5. **Location**: Westminster is the most affected area in london by short-term rentals, in January 2020 there were 8,836 short-term rental listings in the borough.
 
 ```{python}
@@ -408,28 +408,7 @@ Our intial refelection on the data provided on the graph was that the prices of 
 # Summary
 
 
-Airbnb is being used in london predominantly for long term rentals and it is using up a significant portion of the housing stock to do this. There are a variety of different actors on the platform with the majority being individuals who only have 1 property, however there are individuals/groups who use the platform as a large scale property businesses. 
+Airbnb is being used in london predominantly for long term rentals and it is using up a significant portion of the housing stock to do this. There are a variety of different actors on the platform with the majority being individuals who only have 1 property, however there are individuals/groups who use the platform as a large scale property businesses. This means that the platform is being used as an alternative the housing market by a number of different actors. People appear to be charging more than the housing market on the platform however it is worth delving into this further. The next step is to work on a more in depth analysis of the prices on the platform.
 
-Further avenues to explore will involve  
--Predicting which properties are likely to be used for long term and short term rentals   
--Predicting the price of a Listing
 
-```{python}
 
-```
-
-```{python}
-
-```
-
-```{python}
-
-```
-
-```{python}
-
-```
-
-```{python}
-
-```
