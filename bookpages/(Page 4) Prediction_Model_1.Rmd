@@ -12,16 +12,6 @@ jupyter:
     name: python3
 ---
 
-```{python}
-from projtools import data_tools as dt
-from projtools import plotting_tools as pt 
-from projtools import quartile_prices as qp
-from projtools import k_best_neighbours_prediction as k
-from projtools import ttest_for_errors as ttest
-data = dt.data_setup()
-
-```
-
 # Prediction model use
 
 ### Introduction
@@ -37,6 +27,14 @@ The problems are:
  - As can be inferred from the previous pages some hosts ask for a lot higher pricing than other similar properties. Therefore, guests may find it difficult to identify whether they are being ripped off or not.
 
 
+```{python}
+from projtools import data_tools as dt
+from projtools import plotting_tools as pt 
+from projtools import quartile_prices as qp
+from projtools import k_best_neighbours_prediction as k
+from projtools import ttest_for_errors as ttest
+data = dt.data_setup()
+```
 
 ## Problem 1
 
@@ -144,98 +142,30 @@ The function does the following:
 - These values are then compared to the corresponding standardised values for a random sample of 1000 listings in the dataframe
 - The prices of the five most similar listings are then averaged to provide a predicted price for that property given its charcateristics
 - The difference is then calculated between the actual price and the predicted price
-- A simple ttest is then done using this result and the error scores for x number of random rows in the data to test the significance of the actual price and the predicted price
-- The significance level is decided by the guest to allow them to set there own boundaries for how much variation between the deviation in the predicted price and the actual price of the property they are intersted in and the equivalent deviation for the other properties that they are okay with before they consider the property that they are interested in to be a rip off.
-- Based on whether the likelihood of getting the deviation result of their chosen listing is greater than or less than their chosen significance level for either the fucntion will state "Overpriced"
+- A simple ttest is then done using this result and the error scores for x number rows in the data to test the significance of the actual price and the predicted price
+- The significance level is set at 0.1 
+- If the difference between the predicted price and the actual price for the listing of interest is greater than 90% of x listings the fucntion will state "Overpriced"
 
 The inputs that the guest needs to provide are:
 
 - The ID of the listing they want to investigate
 - The three characteristics e.g accomomodates, number of reviews, review scores rating
-- The significance level
 - The number of rows for deviation comparison (the greater the number the more accurate but the function is)
 
 ```{python}
-# here is an example of the funciion for a particular listing
+# example of the function
 
 ID_Z = 15400
 
 var1 = 'accommodates'
 var2 = 'number_of_reviews'
 var3 = 'review_scores_rating'
-significance = 0.99
 rows = 10
 
-ttest.overprice_function(var1, var2, var3, ID_Z, rows, significance)
-```
-
-```{python}
-ID_Z = 15400
-
-var1 = 'accommodates'
-var2 = 'number_of_reviews'
-var3 = 'review_scores_rating'
-significance = 0.001
-rows = 100
-
-ttest.overprice_function(var1, var2, var3, ID_Z, rows, significance)
+ttest.ttest_function(var1, var2, var3, ID_Z, rows)
 ```
 
 ```{python}
 # to see the code that maked up the function go to k_best_neighbours_prediction.py in projtools and look at the prediction_func_location function
 # then go to ttest_for_errors.py in the same folder and look at overprice_function
-```
-
-```{python}
-ID_Z = 15400
-
-var1 = 'accommodates'
-var2 = 'number_of_reviews'
-var3 = 'review_scores_rating'
-
-significance = 0.99
-rows = 10
-
-ttest.ttest_function(var1, var2, var3, 'price_per_night_£', ID_Z, rows)
-```
-
-```{python}
-ID_Z = 15400
-
-var1 = 'accommodates'
-var2 = 'number_of_reviews'
-var3 = 'review_scores_rating'
-
-significance = 0.99
-rows = 10
-
-ttest.overprice_function_1(var1, var2, var3, ID_Z, rows, significance)
-```
-
-```{python}
-
-```
-
-```{python}
-
-```
-
-```{python}
-
-```
-
-```{python}
-
-```
-
-```{python}
-
-```
-
-```{python}
-
-```
-
-```{python}
-
 ```
